@@ -1,0 +1,11 @@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-exception: true
+    include-stacktrace: always
+###
+security:
+  firebase:
+    admin-credentials-file-path: credentials/firebase-admin-credentials.json
+    web-credentials-file-path: credentials/firebase-web-credentials.json

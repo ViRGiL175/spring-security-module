@@ -1,0 +1,24 @@
+### Создаем временную авторизационную запись на сервере, запоминаем её UUID
+POST http://localhost:8080/auth/firebase/page/record
+
+### Заходим из браузера на страничку авторизации и отдаем UUID в параметр
+GET http://localhost:8080/auth/firebase/page?authRecordUuid=uuid-value
+
+### Страничка в браузере обновит авторизационную запись по данному UUID
+PUT http://localhost:8080/auth/firebase/page/record
+Authorization: {"authScheme":"FIREBASE","credentials":{"auth_record_uuid":"uuid-value"}}
+
+### Теперь можно забрать авторизационную запись по UUID
+GET http://localhost:8080/auth/firebase/page/record
+Authorization: {"authScheme":"FIREBASE","credentials":{"auth_record_uuid":"uuid-value"}}
+
+### Удалить за собой временную авторизационную запись по UUID
+DELETE http://localhost:8080/auth/firebase/page/record
+Authorization: {"authScheme":"FIREBASE","credentials":{"auth_record_uuid":"uuid-value"}}
+
+### Теперь с этими авторизационными данными можно пройти полноценную авторизацию
+POST http://localhost:8080/auth/firebase
+Authorization: {"authScheme":"FIREBASE","credentials":{"firebase_auth_token":"firebase-auth-token-value","firebase_uid":"firebase-uid-value"}}
+
+### Теперь можно гулять по АПИ
+GET http://localhost:8080/content/user
