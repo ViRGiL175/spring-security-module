@@ -1,3 +1,9 @@
+### Custom Project Ignores ###
+firebase-admin-credentials.json
+firebase-web-credentials.json
+firebase_auth_page.html
+docker-compose.yml
+
 HELP.md
 .gradle
 build/
