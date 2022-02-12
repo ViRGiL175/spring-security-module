@@ -40,7 +40,3 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
-task prepareKotlinBuildScriptModel {
-    // Непонятно зачем требуется
-}
