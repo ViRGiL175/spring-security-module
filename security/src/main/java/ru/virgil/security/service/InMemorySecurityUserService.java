@@ -1,12 +1,9 @@
 package ru.virgil.security.service;
 
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.virgil.security.entity.BaseSecurityUser;
 import ru.virgil.security.entity.SecurityUser;
-import ru.virgil.security.service.SecurityUserService;
 
 import java.util.HashSet;
 import java.util.Set;
