@@ -17,8 +17,8 @@ import ru.virgil.example.order.BuyingOrderDto;
 import ru.virgil.example.order.BuyingOrderService;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
-import ru.virgil.example.util.TestUtils;
 import ru.virgil.example.util.WithMockFirebaseUser;
+import ru.virgil.utils.TestUtils;
 
 import java.util.UUID;
 

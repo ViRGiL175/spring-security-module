@@ -18,10 +18,9 @@ import ru.virgil.example.box.BoxDto;
 import ru.virgil.example.box.BoxService;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
-import ru.virgil.example.util.TestUtils;
 import ru.virgil.example.util.WithMockFirebaseUser;
+import ru.virgil.utils.TestUtils;
 
-import java.util.Random;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,7 +38,6 @@ public class BoxApiTest {
     private final BoxService boxService;
     private final UserDetailsService userDetailsService;
     private final TestUtils testUtils;
-    private final Random random;
     private final ObjectMapper jackson;
 
     @Test

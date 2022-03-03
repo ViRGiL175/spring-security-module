@@ -1,0 +1,36 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id "org.springframework.boot" version "2.6.4" apply false
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id "java-library"
+}
+
+group = "ru.virgil"
+version = "0.0.1-SNAPSHOT"
+sourceCompatibility = "17"
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+    implementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+test {
+    useJUnitPlatform()
+}

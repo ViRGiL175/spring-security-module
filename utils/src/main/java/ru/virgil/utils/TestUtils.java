@@ -1,4 +1,5 @@
-package ru.virgil.example.util;
+package ru.virgil.utils;
+
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
