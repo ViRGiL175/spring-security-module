@@ -24,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     );
     private final FirebaseAuthorizationProvider firebaseAuthorizationProvider;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final SecurityProperties securityProperties;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -34,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(AUTH_PAGE_PATHS.values().toArray(String[]::new)).permitAll()
                 .mvcMatchers("/", "/favicon.ico", "/error").permitAll()
+                //                .mvcMatchers(securityProperties.anonymousPaths()).permitAll()
                 .mvcMatchers("/**").authenticated()
                 .and()
                 .addFilterBefore(new FirebaseAuthenticationFilter(authenticationManager()),

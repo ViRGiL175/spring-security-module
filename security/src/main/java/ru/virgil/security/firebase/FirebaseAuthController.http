@@ -19,6 +19,3 @@ Authorization: {"authScheme":"FIREBASE","credentials":{"auth_record_uuid":"uuid-
 ### Теперь с этими авторизационными данными можно пройти полноценную авторизацию
 POST http://localhost:8080/auth/firebase
 Authorization: {"authScheme":"FIREBASE","credentials":{"firebase_auth_token":"firebase-auth-token-value","firebase_uid":"firebase-uid-value"}}
-
-### Теперь можно гулять по АПИ
-GET http://localhost:8080/content/user

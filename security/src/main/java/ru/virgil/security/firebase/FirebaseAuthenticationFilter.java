@@ -9,8 +9,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import ru.virgil.security.entity.AuthMethods;
 import ru.virgil.security.SecurityConfig;
+import ru.virgil.security.entity.AuthMethods;
 import ru.virgil.security.header.AuthorizationHeader;
 
 import javax.servlet.ServletException;
