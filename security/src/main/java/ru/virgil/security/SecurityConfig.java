@@ -10,6 +10,7 @@ import ru.virgil.security.firebase.FirebaseAuthenticationFilter;
 import ru.virgil.security.firebase.FirebaseAuthorizationProvider;
 
 import java.util.Map;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
+        String[] propertyIgnoredPaths = Optional.ofNullable(securityProperties.anonymousPaths()).orElse(new String[0]);
         httpSecurity
                 // todo: стандартный редирект на страницу успешной безопасности
                 // todo: разобраться, как включить
@@ -35,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(AUTH_PAGE_PATHS.values().toArray(String[]::new)).permitAll()
                 .mvcMatchers("/", "/favicon.ico", "/error").permitAll()
-                //                .mvcMatchers(securityProperties.anonymousPaths()).permitAll()
+                .mvcMatchers(propertyIgnoredPaths).permitAll()
                 .mvcMatchers("/**").authenticated()
                 .and()
                 .addFilterBefore(new FirebaseAuthenticationFilter(authenticationManager()),
