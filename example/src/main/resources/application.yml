@@ -20,3 +20,5 @@ security:
   firebase:
     admin-credentials-file-path: credentials/firebase-admin-credentials.json
     web-credentials-file-path: credentials/firebase-web-credentials.json
+  anonymous-paths:
+    - "/actuator/**"
