@@ -1,8 +1,11 @@
 package ru.virgil.example.box;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,13 +27,16 @@ public class BoxController {
     }
 
     @GetMapping("/{uuid}")
+    @PostAuthorize("hasRole('ROLE_POLICEMAN') or returnObject.type != T(ru.virgil.example.box.BoxType).WEAPONED")
     public BoxDto get(@PathVariable UUID uuid) {
         Box box = boxService.get(uuid);
         return boxMapper.toDto(box);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_POLICEMAN') or #boxDto.type != T(ru.virgil.example.box.BoxType).WEAPONED")
     public BoxDto post(@RequestBody BoxDto boxDto) {
+        assert boxDto.getType() != null;
         Box box = boxMapper.toEntity(boxDto);
         box = boxService.create(box);
         return boxMapper.toDto(box);
@@ -48,4 +54,9 @@ public class BoxController {
         boxService.delete(uuid);
     }
 
+    @GetMapping("/weaponed")
+    @RolesAllowed("ROLE_POLICEMAN")
+    public List<Box> deleteAllWeaponed() {
+        return boxService.getAllWeaponed();
+    }
 }

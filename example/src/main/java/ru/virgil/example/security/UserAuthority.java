@@ -1,6 +1,7 @@
 package ru.virgil.example.security;
 
 public enum UserAuthority {
-    USER,
-    ADMIN,
+    ROLE_USER,
+    ROLE_ADMIN,
+    ROLE_POLICEMAN,
 }

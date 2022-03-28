@@ -23,4 +23,5 @@ public interface BoxRepository extends JpaRepository<Box, UUID> {
 
     long countAllByOwner(UserDetails owner);
 
+    List<Box> findAllByType(BoxType boxType);
 }

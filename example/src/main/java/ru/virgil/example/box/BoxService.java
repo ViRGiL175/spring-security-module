@@ -53,6 +53,10 @@ public class BoxService {
         repository.delete(box);
     }
 
+    public List<Box> getAllWeaponed() {
+        return repository.findAllByType(BoxType.WEAPONED);
+    }
+
     public long countMyBoxes() {
         return repository.countAllByOwner(getOwner());
     }
