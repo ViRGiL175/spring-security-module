@@ -34,21 +34,15 @@ public class BoxMockService {
     private List<Box> init(int count) {
         List<Box> entities = IntStream.range(0, count)
                 .mapToObj(value -> new Box())
-                .map(this::fill)
                 .toList();
         return service.getRepository().saveAll(entities);
     }
 
     private Box fill(UserDetails owner, Box entity) {
         entity.setOwner(owner);
-        return fill(entity);
-    }
-
-    private Box fill(Box entity) {
         entity.setDescription(faker.chuckNorris().fact());
         entity.setPrice(random.nextInt(100, 10000));
         entity.setWeight(random.nextFloat(15f, 1000f));
-        entity.setType(BoxType.USUAL);
         return entity;
     }
 

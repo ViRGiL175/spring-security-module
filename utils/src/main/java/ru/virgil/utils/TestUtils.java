@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -38,6 +39,12 @@ public class TestUtils {
     // todo: изввлечение коллекций?
     public <T> T extractDtoFromResponse(MvcResult mvcResult, Class<T> dtoClass) throws IOException {
         return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), dtoClass);
+    }
+
+    public <C extends Collection<T>, T> C extractCollectionsDtoFromResponse(
+            MvcResult mvcResult, Class<? extends Collection> collectionClass, Class<T> dtoClass) throws IOException {
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                objectMapper.getTypeFactory().constructCollectionType(collectionClass, dtoClass));
     }
 
     public void printResponse(MvcResult mvcResult) {

@@ -57,7 +57,8 @@ public class BoxController {
 
     @GetMapping("/weaponed")
     @RolesAllowed("ROLE_POLICEMAN")
-    public List<Box> deleteAllWeaponed() {
-        return boxService.getAllWeaponed();
+    public List<BoxDto> getAllWeaponed() {
+        return boxService.getAllWeaponed().stream()
+                .map(boxMapper::toDto).toList();
     }
 }

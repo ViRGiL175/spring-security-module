@@ -54,7 +54,7 @@ public class BoxService {
     }
 
     public List<Box> getAllWeaponed() {
-        return repository.findAllByType(BoxType.WEAPONED);
+        return repository.findAllByOwnerAndType(getOwner(), BoxType.WEAPONED);
     }
 
     public long countMyBoxes() {

@@ -23,6 +23,7 @@ import ru.virgil.example.util.security.policeman.WithMockFirebasePoliceman;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
 import ru.virgil.utils.TestUtils;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,8 +51,8 @@ public class BoxApiTest {
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        // todo: извлечение коллекции
-        Truth.assertThat(mvcResult.getResponse().getContentAsString()).isNotEmpty();
+        List<BoxDto> boxDtoList = testUtils.extractCollectionsDtoFromResponse(mvcResult, List.class, BoxDto.class);
+        Truth.assertThat(boxDtoList).isNotEmpty();
     }
 
     @Test
@@ -216,12 +217,26 @@ public class BoxApiTest {
     @Test
     @WithMockFirebasePoliceman
     void getAllWeaponedByPoliceman() throws Exception {
+        BoxDto testDto = new BoxDto();
+        String testValue = "CREATED";
+        testDto.setDescription(testValue);
+        testDto.setPrice(50000);
+        testDto.setWeight(658);
+        testDto.setType(BoxType.WEAPONED);
+        String dtoJson = jackson.writeValueAsString(testDto);
+        mockMvc.perform(MockMvcRequestBuilders.post("/box")
+                        .content(dtoJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(testUtils::printResponse)
+                .andExpect(status().isOk())
+                .andReturn();
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/weaponed")
                         .queryParam(BoxController.PAGE_PARAM, String.valueOf(BOX_PAGE))
                         .queryParam(BoxController.PAGE_SIZE_PARAM, String.valueOf(BOX_PAGE_SIZE)))
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        Truth.assertThat(mvcResult.getResponse().getContentAsString()).isNotEmpty();
+        List<BoxDto> boxDtoList = testUtils.extractCollectionsDtoFromResponse(mvcResult, List.class, BoxDto.class);
+        Truth.assertThat(boxDtoList).isNotEmpty();
     }
 }

@@ -19,7 +19,7 @@ public class Box extends IdentifiedEntity {
     private UserDetails owner;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private BoxType type;
+    private BoxType type = BoxType.USUAL;
     @ManyToOne(cascade = CascadeType.REMOVE)
     private Truck truck;
     private String description;
