@@ -1,5 +1,6 @@
 package ru.virgil.example.box;
 
+import com.google.common.truth.Truth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,7 +37,7 @@ public class BoxController {
     @PostMapping
     @PreAuthorize("hasRole('ROLE_POLICEMAN') or #boxDto.type != T(ru.virgil.example.box.BoxType).WEAPONED")
     public BoxDto post(@RequestBody BoxDto boxDto) {
-        assert boxDto.getType() != null;
+        Truth.assertThat(boxDto.getType()).isNotNull();
         Box box = boxMapper.toEntity(boxDto);
         box = boxService.create(box);
         return boxMapper.toDto(box);
