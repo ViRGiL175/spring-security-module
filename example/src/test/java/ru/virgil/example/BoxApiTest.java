@@ -67,11 +67,7 @@ public class BoxApiTest {
 
     @Test
     void createWithoutType() throws Exception {
-        BoxDto testDto = new BoxDto();
-        String testValue = "CREATED";
-        testDto.setDescription(testValue);
-        testDto.setPrice(50000);
-        testDto.setWeight(658);
+        BoxDto testDto = new BoxDto(null, "CREATED", 50000, 658);
         String dtoJson = jackson.writeValueAsString(testDto);
         mockMvc.perform(MockMvcRequestBuilders.post("/box")
                         .content(dtoJson)
@@ -83,12 +79,7 @@ public class BoxApiTest {
 
     @Test
     void create() throws Exception {
-        BoxDto testDto = new BoxDto();
-        String testValue = "CREATED";
-        testDto.setDescription(testValue);
-        testDto.setPrice(50000);
-        testDto.setWeight(658);
-        testDto.setType(BoxType.USUAL);
+        BoxDto testDto = new BoxDto(BoxType.USUAL, "CREATED", 50000, 658);
         String dtoJson = jackson.writeValueAsString(testDto);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/box")
                         .content(dtoJson)
@@ -105,19 +96,12 @@ public class BoxApiTest {
                 .andExpect(status().isOk())
                 .andReturn();
         BoxDto requestedDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getPrice()).isEqualTo(requestedDto.getPrice());
-        Truth.assertThat(testDto.getWeight()).isEqualTo(requestedDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(requestedDto.getDescription());
+        Truth.assertThat(createdDto).isEqualTo(requestedDto);
     }
 
     @Test
     void edit() throws Exception {
-        BoxDto testDto = new BoxDto();
-        String testValue = "EDITED";
-        testDto.setDescription(testValue);
-        testDto.setWeight(456);
-        testDto.setPrice(78434);
-        testDto.setType(BoxType.USUAL);
+        BoxDto testDto = new BoxDto(BoxType.USUAL, "EDITED", 78434, 456);
         String chatDtoJson = jackson.writeValueAsString(testDto);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/box/%s".formatted(randomBoxUuid()))
                         .content(chatDtoJson)
@@ -134,9 +118,7 @@ public class BoxApiTest {
                 .andExpect(status().isOk())
                 .andReturn();
         BoxDto requestedDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getPrice()).isEqualTo(requestedDto.getPrice());
-        Truth.assertThat(testDto.getWeight()).isEqualTo(requestedDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(requestedDto.getDescription());
+        Truth.assertThat(editedDto).isEqualTo(requestedDto);
     }
 
     @Test
@@ -159,12 +141,7 @@ public class BoxApiTest {
 
     @Test
     void createWeaponedByUsualUser() throws Exception {
-        BoxDto testDto = new BoxDto();
-        String testValue = "CREATED";
-        testDto.setDescription(testValue);
-        testDto.setPrice(50000);
-        testDto.setWeight(658);
-        testDto.setType(BoxType.WEAPONED);
+        BoxDto testDto = new BoxDto(BoxType.WEAPONED, "CREATED-BY-USUAL-USER", 50000, 658);
         String dtoJson = jackson.writeValueAsString(testDto);
         mockMvc.perform(MockMvcRequestBuilders.post("/box")
                         .content(dtoJson)
@@ -177,12 +154,7 @@ public class BoxApiTest {
     @Test
     @WithMockFirebasePoliceman
     void createWeaponedByPoliceman() throws Exception {
-        BoxDto testDto = new BoxDto();
-        String testValue = "CREATED";
-        testDto.setDescription(testValue);
-        testDto.setPrice(50000);
-        testDto.setWeight(658);
-        testDto.setType(BoxType.WEAPONED);
+        BoxDto testDto = new BoxDto(BoxType.WEAPONED, "CREATED-BY-POLICEMAN", 50000, 658);
         String dtoJson = jackson.writeValueAsString(testDto);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/box")
                         .content(dtoJson)
@@ -199,9 +171,7 @@ public class BoxApiTest {
                 .andExpect(status().isOk())
                 .andReturn();
         BoxDto requestedDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getPrice()).isEqualTo(requestedDto.getPrice());
-        Truth.assertThat(testDto.getWeight()).isEqualTo(requestedDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(requestedDto.getDescription());
+        Truth.assertThat(createdDto).isEqualTo(requestedDto);
     }
 
     @Test
@@ -217,12 +187,7 @@ public class BoxApiTest {
     @Test
     @WithMockFirebasePoliceman
     void getAllWeaponedByPoliceman() throws Exception {
-        BoxDto testDto = new BoxDto();
-        String testValue = "CREATED";
-        testDto.setDescription(testValue);
-        testDto.setPrice(50000);
-        testDto.setWeight(658);
-        testDto.setType(BoxType.WEAPONED);
+        BoxDto testDto = new BoxDto(BoxType.WEAPONED, "CREATED-BY-POLICEMAN", 50000, 658);
         String dtoJson = jackson.writeValueAsString(testDto);
         mockMvc.perform(MockMvcRequestBuilders.post("/box")
                         .content(dtoJson)

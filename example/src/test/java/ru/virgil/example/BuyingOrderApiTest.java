@@ -15,11 +15,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.virgil.example.box.BoxController;
 import ru.virgil.example.order.BuyingOrderDto;
 import ru.virgil.example.order.BuyingOrderService;
+import ru.virgil.example.truck.TruckDto;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
 import ru.virgil.utils.TestUtils;
 
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -44,8 +46,9 @@ public class BuyingOrderApiTest {
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        // todo: извлечение коллекции
-        Truth.assertThat(mvcResult.getResponse().getContentAsString()).isNotEmpty();
+        List<BuyingOrderDto> buyingOrderDtoList = testUtils
+                .extractCollectionsDtoFromResponse(mvcResult, List.class, BuyingOrderDto.class);
+        Truth.assertThat(buyingOrderDtoList).isNotEmpty();
     }
 
     @Test
@@ -68,8 +71,9 @@ public class BuyingOrderApiTest {
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        // todo: извлечение коллекции
-        Truth.assertThat(mvcResult.getResponse().getContentAsString()).isNotEmpty();
+        List<TruckDto> truckDtoList = testUtils
+                .extractCollectionsDtoFromResponse(mvcResult, List.class, TruckDto.class);
+        Truth.assertThat(truckDtoList).isNotEmpty();
     }
 
     private UUID randomTruckUuid() {
@@ -79,5 +83,4 @@ public class BuyingOrderApiTest {
                 .findAny().orElseThrow()
                 .getUuid();
     }
-
 }
