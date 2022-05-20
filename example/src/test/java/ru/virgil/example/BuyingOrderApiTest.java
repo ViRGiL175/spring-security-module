@@ -47,7 +47,7 @@ public class BuyingOrderApiTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         List<BuyingOrderDto> buyingOrderDtoList = testUtils
-                .extractCollectionsDtoFromResponse(mvcResult, List.class, BuyingOrderDto.class);
+                .extractDtoFromResponse(mvcResult, List.class, BuyingOrderDto.class);
         Truth.assertThat(buyingOrderDtoList).isNotEmpty();
     }
 
@@ -72,7 +72,7 @@ public class BuyingOrderApiTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
         List<TruckDto> truckDtoList = testUtils
-                .extractCollectionsDtoFromResponse(mvcResult, List.class, TruckDto.class);
+                .extractDtoFromResponse(mvcResult, List.class, TruckDto.class);
         Truth.assertThat(truckDtoList).isNotEmpty();
     }
 

@@ -51,7 +51,7 @@ public class BoxApiTest {
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        List<BoxDto> boxDtoList = testUtils.extractCollectionsDtoFromResponse(mvcResult, List.class, BoxDto.class);
+        List<BoxDto> boxDtoList = testUtils.extractDtoFromResponse(mvcResult, List.class, BoxDto.class);
         Truth.assertThat(boxDtoList).isNotEmpty();
     }
 
@@ -201,7 +201,7 @@ public class BoxApiTest {
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        List<BoxDto> boxDtoList = testUtils.extractCollectionsDtoFromResponse(mvcResult, List.class, BoxDto.class);
+        List<BoxDto> boxDtoList = testUtils.extractDtoFromResponse(mvcResult, List.class, BoxDto.class);
         Truth.assertThat(boxDtoList).isNotEmpty();
     }
 }
