@@ -32,9 +32,4 @@ public class StatsController {
         long ordersCount = buyingOrderService.countMy();
         return new StatsDto(boxesCount, trucksCount, ordersCount);
     }
-
-    public record StatsDto(long boxes, long trucks, long orders) {
-
-    }
-
 }

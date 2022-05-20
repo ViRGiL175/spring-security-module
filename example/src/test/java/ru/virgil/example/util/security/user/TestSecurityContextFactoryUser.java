@@ -1,4 +1,4 @@
-package ru.virgil.example.util;
+package ru.virgil.example.util.security.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class TestSecurityContextFactory implements WithSecurityContextFactory<WithMockFirebaseUser> {
+public class TestSecurityContextFactoryUser implements WithSecurityContextFactory<WithMockFirebaseUser> {
 
     private final SecurityUserDetailsService securityUserDetailsService;
 
@@ -24,7 +24,7 @@ public class TestSecurityContextFactory implements WithSecurityContextFactory<Wi
     public SecurityContext createSecurityContext(WithMockFirebaseUser mockFirebaseUser) {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         FirebaseAuthenticationToken firebaseAuthenticationToken = new FirebaseAuthenticationToken(
-                Set.of(new SimpleGrantedAuthority(UserAuthority.USER.name())),
+                Set.of(new SimpleGrantedAuthority(UserAuthority.ROLE_USER.name())),
                 mockFirebaseUser.firebaseUserId(),
                 mockFirebaseUser.firebaseAuthToken()
         );

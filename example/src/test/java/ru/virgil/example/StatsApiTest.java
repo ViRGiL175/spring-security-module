@@ -11,7 +11,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.virgil.example.stats.StatsController;
-import ru.virgil.example.util.WithMockFirebaseUser;
+import ru.virgil.example.stats.StatsDto;
+import ru.virgil.example.util.security.user.WithMockFirebaseUser;
 import ru.virgil.utils.TestUtils;
 
 @SpringBootTest
@@ -30,7 +31,7 @@ public class StatsApiTest {
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        StatsController.StatsDto statsDto = testUtils.extractDtoFromResponse(mvcResult, StatsController.StatsDto.class);
+        StatsDto statsDto = testUtils.extractDtoFromResponse(mvcResult, StatsDto.class);
     }
 
 
@@ -40,7 +41,7 @@ public class StatsApiTest {
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        StatsController.StatsDto statsDto = testUtils.extractDtoFromResponse(mvcResult, StatsController.StatsDto.class);
+        StatsDto statsDto = testUtils.extractDtoFromResponse(mvcResult, StatsDto.class);
     }
 
 }

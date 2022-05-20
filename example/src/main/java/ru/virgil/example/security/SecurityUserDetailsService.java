@@ -36,7 +36,7 @@ public class SecurityUserDetailsService implements ru.virgil.security.service.Se
     public SecurityUserDetails register(FirebaseAuthenticationToken firebaseAuthenticationToken) {
         SecurityUserDetails securityUserDetails = new SecurityUserDetails();
         securityUserDetails.setFirebaseUserId(firebaseAuthenticationToken.getPrincipal().toString());
-        securityUserDetails.setAuthorities(Set.of(UserAuthority.USER));
+        securityUserDetails.setAuthorities(Set.of(UserAuthority.ROLE_USER));
         securityUserDetails = repository.save(securityUserDetails);
         UserDetails userDetails = new UserDetails();
         userDetails.setSecurityUserDetails(securityUserDetails);
