@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import ru.virgil.example.stats.StatsController;
 import ru.virgil.example.stats.StatsDto;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
 import ru.virgil.utils.TestUtils;

@@ -24,7 +24,7 @@ public class TestSecurityContextFactoryPoliceman implements WithSecurityContextF
     public SecurityContext createSecurityContext(WithMockFirebasePoliceman mockFirebaseUser) {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         FirebaseAuthenticationToken firebaseAuthenticationToken = new FirebaseAuthenticationToken(
-                Set.of(new SimpleGrantedAuthority(UserAuthority.ROLE_POLICEMAN.name())),
+                Set.of(new SimpleGrantedAuthority(UserAuthority.ROLE_POLICE.name())),
                 mockFirebaseUser.firebaseUserId(),
                 mockFirebaseUser.firebaseAuthToken()
         );

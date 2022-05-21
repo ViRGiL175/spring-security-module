@@ -28,14 +28,14 @@ public class BoxController {
     }
 
     @GetMapping("/{uuid}")
-    @PostAuthorize("hasRole('ROLE_POLICEMAN') or returnObject.type != T(ru.virgil.example.box.BoxType).WEAPONED")
+    @PostAuthorize("hasRole('ROLE_POLICE') or @boxSecurity.hasWeapon(returnObject)")
     public BoxDto get(@PathVariable UUID uuid) {
         Box box = boxService.get(uuid);
         return boxMapper.toDto(box);
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_POLICEMAN') or #boxDto.type != T(ru.virgil.example.box.BoxType).WEAPONED")
+    @PreAuthorize("hasRole('ROLE_POLICE') or @boxSecurity.hasWeapon(#boxDto)")
     public BoxDto post(@RequestBody BoxDto boxDto) {
         Truth.assertThat(boxDto.getType()).isNotNull();
         Box box = boxMapper.toEntity(boxDto);
@@ -55,10 +55,11 @@ public class BoxController {
         boxService.delete(uuid);
     }
 
-    @GetMapping("/weaponed")
-    @RolesAllowed("ROLE_POLICEMAN")
-    public List<BoxDto> getAllWeaponed() {
-        return boxService.getAllWeaponed().stream()
-                .map(boxMapper::toDto).toList();
+    @GetMapping("/weapons")
+    @RolesAllowed("ROLE_POLICE")
+    public List<BoxDto> getAllWeapons() {
+        return boxService.getAllWeapons().stream()
+                .map(boxMapper::toDto)
+                .toList();
     }
 }

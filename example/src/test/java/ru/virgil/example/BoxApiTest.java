@@ -141,7 +141,7 @@ public class BoxApiTest {
 
     @Test
     void createWeaponedByUsualUser() throws Exception {
-        BoxDto testDto = new BoxDto(BoxType.WEAPONED, "CREATED-BY-USUAL-USER", 50000, 658);
+        BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-USUAL-USER", 50000, 658);
         String dtoJson = jackson.writeValueAsString(testDto);
         mockMvc.perform(MockMvcRequestBuilders.post("/box")
                         .content(dtoJson)
@@ -154,7 +154,7 @@ public class BoxApiTest {
     @Test
     @WithMockFirebasePoliceman
     void createWeaponedByPoliceman() throws Exception {
-        BoxDto testDto = new BoxDto(BoxType.WEAPONED, "CREATED-BY-POLICEMAN", 50000, 658);
+        BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-POLICEMAN", 50000, 658);
         String dtoJson = jackson.writeValueAsString(testDto);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/box")
                         .content(dtoJson)
@@ -176,7 +176,7 @@ public class BoxApiTest {
 
     @Test
     void getAllWeaponedByUsualUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/box/weaponed")
+        mockMvc.perform(MockMvcRequestBuilders.get("/box/weapons")
                         .queryParam(BoxController.PAGE_PARAM, String.valueOf(BOX_PAGE))
                         .queryParam(BoxController.PAGE_SIZE_PARAM, String.valueOf(BOX_PAGE_SIZE)))
                 .andDo(testUtils::printResponse)
@@ -187,7 +187,7 @@ public class BoxApiTest {
     @Test
     @WithMockFirebasePoliceman
     void getAllWeaponedByPoliceman() throws Exception {
-        BoxDto testDto = new BoxDto(BoxType.WEAPONED, "CREATED-BY-POLICEMAN", 50000, 658);
+        BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-POLICEMAN", 50000, 658);
         String dtoJson = jackson.writeValueAsString(testDto);
         mockMvc.perform(MockMvcRequestBuilders.post("/box")
                         .content(dtoJson)
@@ -195,7 +195,7 @@ public class BoxApiTest {
                 .andDo(testUtils::printResponse)
                 .andExpect(status().isOk())
                 .andReturn();
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/weaponed")
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/weapons")
                         .queryParam(BoxController.PAGE_PARAM, String.valueOf(BOX_PAGE))
                         .queryParam(BoxController.PAGE_SIZE_PARAM, String.valueOf(BOX_PAGE_SIZE)))
                 .andDo(testUtils::printResponse)
