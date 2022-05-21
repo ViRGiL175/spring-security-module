@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.virgil.example.truck.Truck;
-import ru.virgil.example.truck.TruckService;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 
@@ -19,7 +18,7 @@ public class BoxService {
     @Getter
     private final BoxRepository repository;
     private final UserDetailsService userDetailsService;
-    private final TruckService truckService;
+    private final RandomTrucker randomTrucker;
     private final BoxMerger boxMerger;
 
     public List<Box> getAll(int page, int size) {
@@ -27,8 +26,7 @@ public class BoxService {
     }
 
     public List<Box> getAll(Truck truck, int page, int size) {
-        return repository.findAllByOwnerAndTruck(getOwner(), truck,
-                PageRequest.of(page, size));
+        return repository.findAllByOwnerAndTruck(getOwner(), truck, PageRequest.of(page, size));
     }
 
     public Box get(UUID uuid) {
@@ -36,7 +34,7 @@ public class BoxService {
     }
 
     public Box create(Box box) {
-        Truck truck = truckService.getRandom();
+        Truck truck = randomTrucker.getRandomTruck();
         box.setTruck(truck);
         box.setOwner(getOwner());
         return repository.save(box);
