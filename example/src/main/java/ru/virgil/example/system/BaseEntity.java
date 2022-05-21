@@ -1,16 +1,16 @@
 package ru.virgil.example.system;
 
 import lombok.Data;
+import lombok.experimental.ExtensionMethod;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.annotation.Nullable;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @MappedSuperclass
 @Data
+@ExtensionMethod(value = {LocalDateTime.class, DateApiExtensions.class}, suppressBaseMethods = false)
 public abstract class BaseEntity {
 
     @CreationTimestamp
@@ -19,23 +19,18 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
 
     public LocalDateTime getCreatedAt() {
-        return truncate(createdAt);
+        return createdAt.databaseTruncate();
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = truncate(createdAt);
+        this.createdAt = createdAt.databaseTruncate();
     }
 
     public LocalDateTime getUpdatedAt() {
-        return truncate(updatedAt);
+        return updatedAt.databaseTruncate();
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = truncate(updatedAt);
-    }
-
-    @Nullable
-    private LocalDateTime truncate(@Nullable LocalDateTime original) {
-        return original == null ? null : original.truncatedTo(ChronoUnit.MILLIS);
+        this.updatedAt = updatedAt.databaseTruncate();
     }
 }
