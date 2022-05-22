@@ -6,6 +6,7 @@ import ru.virgil.example.box.Box;
 import ru.virgil.example.box.BoxDto;
 import ru.virgil.example.box.BoxMapper;
 import ru.virgil.example.box.BoxService;
+import ru.virgil.example.system.HttpAddressConstants;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 
@@ -15,10 +16,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/truck")
 @RequiredArgsConstructor
-public class TruckController {
+public class TruckController implements HttpAddressConstants {
 
-    public static final String PAGE_PARAM = "page";
-    public static final String PAGE_SIZE_PARAM = "size";
     private final TruckService truckService;
     private final UserDetailsService userDetailsService;
     private final BoxService boxService;

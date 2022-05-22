@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.virgil.example.system.HttpAddressConstants;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 
@@ -15,10 +16,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/box")
 @RequiredArgsConstructor
-public class BoxController {
+public class BoxController implements HttpAddressConstants {
 
-    public static final String PAGE_PARAM = "page";
-    public static final String PAGE_SIZE_PARAM = "size";
     private final UserDetailsService userDetailsService;
     private final BoxService boxService;
     private final BoxMapper boxMapper;

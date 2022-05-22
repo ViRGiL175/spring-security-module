@@ -2,6 +2,7 @@ package ru.virgil.example.order;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.virgil.example.system.HttpAddressConstants;
 import ru.virgil.example.truck.Truck;
 import ru.virgil.example.truck.TruckDto;
 import ru.virgil.example.truck.TruckMapper;
@@ -13,10 +14,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/buying_order")
 @RequiredArgsConstructor
-public class BuyingOrderController {
+public class BuyingOrderController implements HttpAddressConstants {
 
-    public static final String PAGE_PARAM = "page";
-    public static final String PAGE_SIZE_PARAM = "size";
     private final BuyingOrderService buyingOrderService;
     private final BuyingOrderMapper buyingOrderMapper;
     private final TruckService truckService;
