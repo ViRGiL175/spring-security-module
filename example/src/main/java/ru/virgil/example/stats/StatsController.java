@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.virgil.example.box.BoxService;
 import ru.virgil.example.order.BuyingOrderService;
+import ru.virgil.example.truck.TruckCounterModule;
 import ru.virgil.example.truck.TruckService;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
@@ -17,6 +18,7 @@ public class StatsController {
 
     private final BoxService boxService;
     private final TruckService truckService;
+    private final TruckCounterModule truckCounterModule;
     private final BuyingOrderService buyingOrderService;
     private final UserDetailsService userDetailsService;
 
@@ -32,7 +34,7 @@ public class StatsController {
     public StatsDto getMyStats() {
         UserDetails owner = userDetailsService.getCurrentUser();
         long boxesCount = boxService.countMyBoxes(owner);
-        long trucksCount = truckService.countMy(owner);
+        long trucksCount = truckCounterModule.countAll(owner);
         long ordersCount = buyingOrderService.countMy(owner);
         return new StatsDto(boxesCount, trucksCount, ordersCount);
     }

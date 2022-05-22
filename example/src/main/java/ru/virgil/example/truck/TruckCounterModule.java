@@ -2,8 +2,13 @@ package ru.virgil.example.truck;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.virgil.example.truck.Truck;
-import ru.virgil.example.truck.TruckService;
+import ru.virgil.example.order.BuyingOrder;
+import ru.virgil.example.order.BuyingOrderService;
+import ru.virgil.example.user.UserDetails;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Это пример функционального компонента.
@@ -21,11 +26,20 @@ import ru.virgil.example.truck.TruckService;
  */
 @Component
 @RequiredArgsConstructor
-public class RandomTrucker {
+public class TruckCounterModule {
 
     private final TruckService truckService;
+    private final BuyingOrderService buyingOrderService;
 
-    public Truck getRandomTruck() {
-        return truckService.getRandom();
+    public long countAll(UserDetails owner) {
+        // todo: почему-то тесты проходят только с полностью дропнутой базы
+        List<BuyingOrder> buyingOrders = buyingOrderService.getAll(owner, 0, Integer.MAX_VALUE);
+        Set<Truck> trucksSet = new HashSet<>();
+        buyingOrders.forEach(buyingOrder -> {
+            List<Truck> trucks = truckService.getAll(buyingOrder, 0, Integer.MAX_VALUE);
+            trucksSet.addAll(trucks);
+        });
+        return trucksSet.size();
     }
+
 }

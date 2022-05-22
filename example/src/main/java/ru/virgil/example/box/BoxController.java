@@ -6,6 +6,8 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.virgil.example.system.HttpAddressConstants;
+import ru.virgil.example.truck.Truck;
+import ru.virgil.example.truck.TruckService;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class BoxController implements HttpAddressConstants {
 
     private final UserDetailsService userDetailsService;
+    private final TruckService truckService;
     private final BoxService boxService;
     private final BoxMapper boxMapper;
 
@@ -49,8 +52,9 @@ public class BoxController implements HttpAddressConstants {
     public BoxDto post(@RequestBody BoxDto boxDto) {
         Truth.assertThat(boxDto.getType()).isNotNull();
         UserDetails owner = userDetailsService.getCurrentUser();
+        Truck assignedTruck = truckService.assignTruck();
         Box box = boxMapper.toEntity(boxDto);
-        box = boxService.create(owner, box);
+        box = boxService.create(owner, assignedTruck, box);
         return boxMapper.toDto(box);
     }
 
