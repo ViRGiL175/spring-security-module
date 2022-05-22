@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.virgil.example.truck.Truck;
 import ru.virgil.example.user.UserDetails;
-import ru.virgil.example.user.UserDetailsService;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,50 +16,46 @@ public class BoxService {
 
     @Getter
     private final BoxRepository repository;
-    private final UserDetailsService userDetailsService;
     private final RandomTrucker randomTrucker;
     private final BoxMerger boxMerger;
 
-    public List<Box> getAll(int page, int size) {
-        return repository.findAllByOwner(getOwner(), PageRequest.of(page, size));
+    public List<Box> getAll(UserDetails owner, int page, int size) {
+        return repository.findAllByOwner(owner, PageRequest.of(page, size));
     }
 
-    public List<Box> getAll(Truck truck, int page, int size) {
-        return repository.findAllByOwnerAndTruck(getOwner(), truck, PageRequest.of(page, size));
+    public List<Box> getAll(UserDetails owner, Truck truck, int page, int size) {
+        return repository.findAllByOwnerAndTruck(owner, truck, PageRequest.of(page, size));
     }
 
-    public Box get(UUID uuid) {
-        return repository.findByOwnerAndUuid(getOwner(), uuid).orElseThrow();
+    public Box get(UserDetails owner, UUID uuid) {
+        return repository.findByOwnerAndUuid(owner, uuid).orElseThrow();
     }
 
-    public Box create(Box box) {
+    public Box create(UserDetails owner, Box box) {
         Truck truck = randomTrucker.getRandomTruck();
         box.setTruck(truck);
-        box.setOwner(getOwner());
+        box.setOwner(owner);
         return repository.save(box);
     }
 
-    public Box edit(UUID uuid, Box patchBox) {
+    public Box edit(UserDetails owner, UUID uuid, Box patchBox) {
         Box serverBox = repository.findById(uuid).orElseThrow();
         serverBox = boxMerger.merge(serverBox, patchBox);
         return repository.save(serverBox);
     }
 
-    public void delete(UUID uuid) {
-        Box box = get(uuid);
+    public void delete(UserDetails owner, UUID uuid) {
+        Box box = get(owner, uuid);
         repository.delete(box);
     }
 
-    public List<Box> getAllWeapons() {
-        return repository.findAllByOwnerAndType(getOwner(), BoxType.WEAPON);
+    public List<Box> getAllWeapons(UserDetails owner) {
+        // todo: не нужен owner?
+        return repository.findAllByOwnerAndType(owner, BoxType.WEAPON);
     }
 
-    public long countMyBoxes() {
-        return repository.countAllByOwner(getOwner());
-    }
-
-    private UserDetails getOwner() {
-        return userDetailsService.getCurrentUser();
+    public long countMyBoxes(UserDetails owner) {
+        return repository.countAllByOwner(owner);
     }
 
 }

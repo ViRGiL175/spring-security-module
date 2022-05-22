@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.virgil.example.order.BuyingOrder;
 import ru.virgil.example.order.BuyingOrderService;
+import ru.virgil.example.user.UserDetails;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +29,7 @@ public class TruckService {
         return repository.findAllByBuyingOrder(buyingOrder, PageRequest.of(page, size));
     }
 
-    public long countMy() {
+    public long countMy(UserDetails owner) {
         List<BuyingOrder> buyingOrders = buyingOrderService.getAll(0, Integer.MAX_VALUE);
         Set<Truck> trucksSet = new HashSet<>();
         buyingOrders.forEach(buyingOrder -> {

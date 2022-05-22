@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class BuyingOrderService {
         return repository.findByOwnerAndUuid(userDetailsService.getCurrentUser(), uuid).orElseThrow();
     }
 
-    public long countMy() {
+    public long countMy(UserDetails owner) {
         return repository.countAllByOwner(userDetailsService.getCurrentUser());
     }
 }

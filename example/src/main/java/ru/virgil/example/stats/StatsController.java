@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.virgil.example.box.BoxService;
 import ru.virgil.example.order.BuyingOrderService;
 import ru.virgil.example.truck.TruckService;
+import ru.virgil.example.user.UserDetails;
+import ru.virgil.example.user.UserDetailsService;
 
 @RestController
 @RequestMapping("/stats")
@@ -16,6 +18,7 @@ public class StatsController {
     private final BoxService boxService;
     private final TruckService truckService;
     private final BuyingOrderService buyingOrderService;
+    private final UserDetailsService userDetailsService;
 
     @GetMapping("/all")
     public StatsDto getAllStats() {
@@ -27,9 +30,10 @@ public class StatsController {
 
     @GetMapping("/my")
     public StatsDto getMyStats() {
-        long boxesCount = boxService.countMyBoxes();
-        long trucksCount = truckService.countMy();
-        long ordersCount = buyingOrderService.countMy();
+        UserDetails owner = userDetailsService.getCurrentUser();
+        long boxesCount = boxService.countMyBoxes(owner);
+        long trucksCount = truckService.countMy(owner);
+        long ordersCount = buyingOrderService.countMy(owner);
         return new StatsDto(boxesCount, trucksCount, ordersCount);
     }
 }
