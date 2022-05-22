@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.virgil.example.truck.RandomTrucker;
 import ru.virgil.example.truck.Truck;
 import ru.virgil.example.user.UserDetails;
 
