@@ -1,4 +1,4 @@
-package ru.virgil.example.box;
+package ru.virgil.example.truck;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
