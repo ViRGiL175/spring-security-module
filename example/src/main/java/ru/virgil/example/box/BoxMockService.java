@@ -1,10 +1,10 @@
 package ru.virgil.example.box;
 
 import lombok.RequiredArgsConstructor;
-import net.datafaker.Faker;
 import org.springframework.stereotype.Service;
 import ru.virgil.example.truck.Truck;
 import ru.virgil.example.user.UserDetails;
+import ru.virgil.utils.FakerUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -16,7 +16,7 @@ public class BoxMockService {
 
     private final BoxService service;
     private final Random random;
-    private final Faker faker;
+    private final FakerUtils faker;
 
     public List<Box> mock(UserDetails owner, int count) {
         List<Box> entities = init(count);

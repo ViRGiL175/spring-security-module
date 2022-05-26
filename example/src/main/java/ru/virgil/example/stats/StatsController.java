@@ -34,7 +34,7 @@ public class StatsController {
     public StatsDto getMyStats() {
         UserDetails owner = userDetailsService.getCurrentUser();
         long boxesCount = boxService.countMyBoxes(owner);
-        long trucksCount = truckCounterModule.countAll(owner);
+        long trucksCount = truckCounterModule.countAllTrucks(owner);
         long ordersCount = buyingOrderService.countMy(owner);
         return new StatsDto(boxesCount, trucksCount, ordersCount);
     }

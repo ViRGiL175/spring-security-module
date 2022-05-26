@@ -1,9 +1,9 @@
 package ru.virgil.example.order;
 
 import lombok.RequiredArgsConstructor;
-import net.datafaker.Faker;
 import org.springframework.stereotype.Service;
 import ru.virgil.example.user.UserDetails;
+import ru.virgil.utils.FakerUtils;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 public class BuyingOrderMockService {
 
-    private final Faker faker;
+    private final FakerUtils faker;
     private final BuyingOrderService service;
 
     public List<BuyingOrder> mock(UserDetails owner, int count) {

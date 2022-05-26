@@ -1,9 +1,10 @@
 package ru.virgil.example.box;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import ru.virgil.example.system.SimpleJpaAccess;
 import ru.virgil.example.truck.Truck;
 import ru.virgil.example.user.UserDetails;
 
@@ -12,9 +13,8 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class BoxService {
+public class BoxService implements SimpleJpaAccess<Box, UUID> {
 
-    @Getter
     private final BoxRepository repository;
     private final BoxMerger boxMerger;
 
@@ -55,4 +55,8 @@ public class BoxService {
         return repository.countAllByOwner(owner);
     }
 
+    @Override
+    public JpaRepository<Box, UUID> getRepository() {
+        return repository;
+    }
 }

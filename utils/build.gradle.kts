@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "ru.virgil"
-version = "0.2.0-SNAPSHOT"
+version = "0.3.0-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -47,4 +47,6 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok")
     implementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // Third-party dependencies
+    api("net.datafaker:datafaker:1.4.0")
 }

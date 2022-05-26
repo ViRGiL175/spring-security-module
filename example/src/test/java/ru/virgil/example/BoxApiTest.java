@@ -134,7 +134,7 @@ public class BoxApiTest {
 
     private UUID randomBoxUuid() {
         UserDetails currentUser = userDetailsService.getCurrentUser();
-        return boxService.getRepository().findAllByOwner(currentUser).stream()
+        return boxService.getAll(currentUser, 0, Integer.MAX_VALUE).stream()
                 .findAny().orElseThrow()
                 .getUuid();
     }

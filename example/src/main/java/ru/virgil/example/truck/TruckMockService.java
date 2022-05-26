@@ -1,10 +1,10 @@
 package ru.virgil.example.truck;
 
 import lombok.RequiredArgsConstructor;
-import net.datafaker.Faker;
 import org.springframework.stereotype.Service;
 import ru.virgil.example.order.BuyingOrder;
 import ru.virgil.example.user.UserDetails;
+import ru.virgil.utils.FakerUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 public class TruckMockService {
 
     private final Random random;
-    private final Faker faker;
+    private final FakerUtils faker;
     private final TruckService service;
 
     public List<Truck> mock(UserDetails owner, int count) {

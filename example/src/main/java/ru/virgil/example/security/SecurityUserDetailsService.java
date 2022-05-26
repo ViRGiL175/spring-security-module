@@ -21,7 +21,7 @@ public class SecurityUserDetailsService implements ru.virgil.security.service.Se
     @Getter
     private final SecurityUserDetailsRepository repository;
     private final UserDetailsService userDetailsService;
-    private final OnUserRegistrationMockService onUserRegistrationMockService;
+    private final OnUserRegistrationMockModule onUserRegistrationMockModule;
 
     @Override
     public SecurityUser registerOrLogin(Authentication authentication) {
@@ -41,7 +41,7 @@ public class SecurityUserDetailsService implements ru.virgil.security.service.Se
         UserDetails userDetails = new UserDetails();
         userDetails.setSecurityUserDetails(securityUserDetails);
         userDetails = userDetailsService.getRepository().save(userDetails);
-        userDetails = onUserRegistrationMockService.mock(userDetails);
+        userDetails = onUserRegistrationMockModule.mock(userDetails);
         userDetails = userDetailsService.getRepository().save(userDetails);
         return securityUserDetails;
     }

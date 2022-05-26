@@ -7,7 +7,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -54,7 +53,7 @@ public class BuyingOrderApiTest {
     @Test
     void get() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/buying_order/%s"
-                        .formatted(randomTruckUuid())))
+                        .formatted(randomOrderUuid())))
                 .andDo(testUtils::printResponse)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
@@ -65,7 +64,7 @@ public class BuyingOrderApiTest {
     @Test
     void getTruckByOrder() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/buying_order/%s/truck"
-                                .formatted(randomTruckUuid()))
+                                .formatted(randomOrderUuid()))
                         .queryParam(BoxController.PAGE_PARAM, String.valueOf(PAGE))
                         .queryParam(BoxController.PAGE_SIZE_PARAM, String.valueOf(PAGE_SIZE)))
                 .andDo(testUtils::printResponse)
@@ -76,10 +75,9 @@ public class BuyingOrderApiTest {
         Truth.assertThat(truckDtoList).isNotEmpty();
     }
 
-    private UUID randomTruckUuid() {
+    private UUID randomOrderUuid() {
         UserDetails currentUser = userDetailsService.getCurrentUser();
-        PageRequest pageRequest = PageRequest.of(PAGE, PAGE_SIZE);
-        return buyingOrderService.getRepository().findAllByOwner(currentUser, pageRequest).stream()
+        return buyingOrderService.getAll(currentUser, PAGE, PAGE_SIZE).stream()
                 .findAny().orElseThrow()
                 .getUuid();
     }
