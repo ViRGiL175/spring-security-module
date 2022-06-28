@@ -49,4 +49,5 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     // Third-party dependencies
     api("net.datafaker:datafaker:1.4.0")
+    implementation("com.google.truth:truth:1.1.3")
 }

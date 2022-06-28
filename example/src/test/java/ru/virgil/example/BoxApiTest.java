@@ -21,6 +21,7 @@ import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 import ru.virgil.example.util.security.policeman.WithMockFirebasePoliceman;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
+import ru.virgil.utils.AssertUtils;
 import ru.virgil.utils.TestUtils;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class BoxApiTest {
     private final UserDetailsService userDetailsService;
     private final TestUtils testUtils;
     private final ObjectMapper jackson;
+    private final AssertUtils assertUtils;
 
     @Test
     void getAll() throws Exception {
@@ -88,9 +90,7 @@ public class BoxApiTest {
                 .andExpect(status().isOk())
                 .andReturn();
         BoxDto createdDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getWeight()).isEqualTo(createdDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(createdDto.getDescription());
-        Truth.assertThat(testDto.getPrice()).isEqualTo(createdDto.getPrice());
+        assertUtils.partialEquals(createdDto, testDto);
         mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/" + createdDto.getUuid()))
                 .andDo(testUtils::printResponse)
                 .andExpect(status().isOk())
@@ -110,9 +110,7 @@ public class BoxApiTest {
                 .andExpect(status().isOk())
                 .andReturn();
         BoxDto editedDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getWeight()).isEqualTo(editedDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(editedDto.getDescription());
-        Truth.assertThat(testDto.getPrice()).isEqualTo(editedDto.getPrice());
+        assertUtils.partialEquals(editedDto, testDto);
         mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/" + editedDto.getUuid()))
                 .andDo(testUtils::printResponse)
                 .andExpect(status().isOk())
@@ -163,9 +161,7 @@ public class BoxApiTest {
                 .andExpect(status().isOk())
                 .andReturn();
         BoxDto createdDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getWeight()).isEqualTo(createdDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(createdDto.getDescription());
-        Truth.assertThat(testDto.getPrice()).isEqualTo(createdDto.getPrice());
+        assertUtils.partialEquals(createdDto, testDto);
         mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/" + createdDto.getUuid()))
                 .andDo(testUtils::printResponse)
                 .andExpect(status().isOk())
