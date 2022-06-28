@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id("org.springframework.boot") version "2.6.8"
+    id("org.springframework.boot") version "2.6.9"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("java")
 }
@@ -52,10 +52,10 @@ dependencies {
 
     // Third party dependencies
     implementation("com.google.truth:truth:1.1.3")
-    implementation("com.google.firebase:firebase-admin:8.1.0")
+    implementation("com.google.firebase:firebase-admin:9.0.0")
     implementation("net.datafaker:datafaker:1.4.0")
-    implementation("org.mapstruct:mapstruct:1.4.2.Final")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
+    implementation("org.mapstruct:mapstruct:1.5.2.Final")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.2.Final")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
     // Spring controlled dependencies

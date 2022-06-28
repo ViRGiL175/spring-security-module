@@ -3,7 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id("org.springframework.boot") version "2.6.8" apply false
+    id("org.springframework.boot") version "2.6.9" apply false
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("java-library")
 }
@@ -47,7 +47,7 @@ dependencies {
     // todo: зависимости должны подхватываться сами
     // Third party dependencies
     api("com.google.truth:truth:1.1.3")
-    api("com.google.firebase:firebase-admin:8.1.0")
+    api("com.google.firebase:firebase-admin:9.0.0")
 
     // Spring Controlled dependencies
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")

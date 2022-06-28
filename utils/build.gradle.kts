@@ -3,7 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id("org.springframework.boot") version "2.6.8" apply false
+    id("org.springframework.boot") version "2.6.9" apply false
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("java-library")
 }
@@ -47,6 +47,7 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok")
     implementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
     // Third-party dependencies
     api("net.datafaker:datafaker:1.4.0")
     implementation("com.google.truth:truth:1.1.3")
