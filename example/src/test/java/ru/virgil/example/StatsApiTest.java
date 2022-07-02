@@ -1,18 +1,17 @@
 package ru.virgil.example;
 
+import com.google.common.truth.Truth;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.virgil.example.stats.StatsDto;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
-import ru.virgil.utils.TestUtils;
+import ru.virgil.utils.fluent_request.RequestUtil;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -21,26 +20,22 @@ import ru.virgil.utils.TestUtils;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class StatsApiTest {
 
-    private final MockMvc mockMvc;
-    private final TestUtils testUtils;
+    private final RequestUtil requestUtil;
 
     @Test
     void getAll() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/stats/all"))
-                .andDo(testUtils::printResponse)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        StatsDto statsDto = testUtils.extractDtoFromResponse(mvcResult, StatsDto.class);
+        StatsDto statsDto = requestUtil.get("/stats/all")
+                .receive(StatsDto.class)
+                .expect(status().isOk());
+        Truth.assertThat(statsDto).isNotNull();
     }
-
 
     @Test
     void getMy() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/stats/my"))
-                .andDo(testUtils::printResponse)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        StatsDto statsDto = testUtils.extractDtoFromResponse(mvcResult, StatsDto.class);
+        StatsDto statsDto = requestUtil.get("/stats/my")
+                .receive(StatsDto.class)
+                .expect(status().isOk());
+        Truth.assertThat(statsDto).isNotNull();
     }
 
 }
