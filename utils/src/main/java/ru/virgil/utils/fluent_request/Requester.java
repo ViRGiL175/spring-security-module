@@ -4,10 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.virgil.utils.TestUtils;
 
@@ -27,6 +29,7 @@ class Requester {
             case POST -> MockMvcRequestBuilders.post(url);
             case PUT -> MockMvcRequestBuilders.put(url);
             case DELETE -> MockMvcRequestBuilders.delete(url);
+            case MULTIPART -> MockMvcRequestBuilders.multipart(url);
         };
     }
 
@@ -36,10 +39,16 @@ class Requester {
                 .contentType(MediaType.APPLICATION_JSON);
     }
 
+    private void addFile(MockMultipartHttpServletRequestBuilder builder, MockMultipartFile mockMultipartFile) {
+        builder.file(mockMultipartFile);
+    }
+
     protected MvcResult makeRequest(RequestModel requestModel) throws Exception {
         MockHttpServletRequestBuilder builder = getHttpBuilder(requestModel.getRequestMethod(), requestModel.getUrl());
         if (Optional.ofNullable(requestModel.getRequestBody()).isPresent()) {
             addBody(builder, requestModel.getRequestBody());
+        } else if (Optional.ofNullable(requestModel.getMockMultipartFile()).isPresent()) {
+            addFile((MockMultipartHttpServletRequestBuilder) builder, requestModel.getMockMultipartFile());
         }
         return mockMvc.perform(builder)
                 .andExpectAll(requestModel.getResultMatchers())

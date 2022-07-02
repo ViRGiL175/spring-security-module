@@ -11,26 +11,37 @@ public class RequestUtil {
     private final Requester requester;
     private final ObjectMapper objectMapper;
 
-    private RequestUtilBuilder createRequestUtilBuilder(RequestMethod requestType, String path) {
+    private BodyBuilderJson startJsonBuilding(RequestMethod requestMethod, String path) {
         RequestModel requestModel = new RequestModel();
-        requestModel.setRequestMethod(requestType);
+        requestModel.setRequestMethod(requestMethod);
         requestModel.setUrl(path);
-        return new RequestUtilBuilder(requestModel, requester, objectMapper);
+        return new BodyBuilderJson(requestModel, requester, objectMapper);
     }
 
-    public RequestUtilBuilder get(String path) {
-        return createRequestUtilBuilder(RequestMethod.GET, path);
+    private BodyBuilderMultipart startMultipartBuilding(RequestMethod requestMethod, String path) {
+        RequestModel requestModel = new RequestModel();
+        requestModel.setRequestMethod(requestMethod);
+        requestModel.setUrl(path);
+        return new BodyBuilderMultipart(requestModel, requester, objectMapper);
     }
 
-    public RequestUtilBuilder post(String path) {
-        return createRequestUtilBuilder(RequestMethod.POST, path);
+    public BodyBuilderJson get(String path) {
+        return startJsonBuilding(RequestMethod.GET, path);
     }
 
-    public RequestUtilBuilder put(String path) {
-        return createRequestUtilBuilder(RequestMethod.PUT, path);
+    public BodyBuilderJson post(String path) {
+        return startJsonBuilding(RequestMethod.POST, path);
     }
 
-    public RequestUtilBuilder delete(String path) {
-        return createRequestUtilBuilder(RequestMethod.DELETE, path);
+    public BodyBuilderJson put(String path) {
+        return startJsonBuilding(RequestMethod.PUT, path);
+    }
+
+    public BodyBuilderJson delete(String path) {
+        return startJsonBuilding(RequestMethod.DELETE, path);
+    }
+
+    public BodyBuilderMultipart multipart(String path) {
+        return startMultipartBuilding(RequestMethod.MULTIPART, path);
     }
 }
