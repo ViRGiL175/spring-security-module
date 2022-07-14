@@ -57,6 +57,8 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.2.Final")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.2.Final")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+    implementation("org.apache.tika:tika-core:2.4.1")
+    implementation("org.apache.tika:tika-parsers:2.4.1")
 
     // Spring controlled dependencies
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -65,6 +67,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springframework.session:spring-session-core")
     runtimeOnly("org.postgresql:postgresql")
     implementation("com.h2database:h2")
