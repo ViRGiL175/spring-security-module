@@ -50,5 +50,7 @@ dependencies {
 
     // Third-party dependencies
     api("net.datafaker:datafaker:1.4.0")
-    implementation("com.google.truth:truth:1.1.3")
+    api("com.google.truth:truth:1.1.3")
+    api("org.apache.tika:tika-core:2.4.1")
+    api("org.apache.tika:tika-parsers:2.4.1")
 }

@@ -9,6 +9,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import ru.virgil.example.user.UserDetails;
+import ru.virgil.utils.FileTypeService;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -30,9 +31,9 @@ public class ImageService {
     public static final Path BASE_PRIVATE_IMAGE_PATH = Path.of("images", "private", "users");
     public static final Path BASE_PROTECTED_IMAGE_PATH = Path.of("images", "protected");
     public static final Path BASE_PUBLIC_IMAGE_PATH = Path.of("images", "public");
-    private final ResourceLoader resourceLoader;
-    private final PrivateFileImageRepository privateFileImageRepository;
-    private final FileTypeService fileTypeService;
+    protected final ResourceLoader resourceLoader;
+    protected final PrivateFileImageRepository privateFileImageRepository;
+    protected final FileTypeService fileTypeService;
 
     public Resource getPrivate(UUID imageUuid, UserDetails owner) {
         PrivateFileImage privateFileImage = privateFileImageRepository.findByOwnerAndUuid(owner, imageUuid)
@@ -74,7 +75,7 @@ public class ImageService {
         copyInWorkPath(BASE_PROTECTED_IMAGE_PATH);
     }
 
-    private void compareDirectories(File source, File destination) throws IOException {
+    protected void compareDirectories(File source, File destination) throws IOException {
         List<String> listOfFilesInA = List.of(Optional.ofNullable(source.list()).orElseThrow(MockImageException::new));
         List<String> listOfFilesInB = List.of(Optional.ofNullable(destination.list()).orElseThrow(MockImageException::new));
         if (!new HashSet<>(listOfFilesInB).containsAll(listOfFilesInA)) {
@@ -82,7 +83,7 @@ public class ImageService {
         }
     }
 
-    private void copyInWorkPath(Path workPath) {
+    protected void copyInWorkPath(Path workPath) {
         try {
             Path resourceClassPath = Paths.get("static").resolve(workPath);
             final Resource resource = resourceLoader.getResource("classpath:" + resourceClassPath + File.separator);

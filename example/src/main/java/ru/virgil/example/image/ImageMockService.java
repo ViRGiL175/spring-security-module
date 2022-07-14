@@ -16,7 +16,7 @@ public class ImageMockService {
 
     // todo: в утилиты
     private final ImageService imageService;
-    private final FakerUtils faker;
+    private final FakerUtils fakerUtils;
 
     public PrivateFileImage mockImage(UserDetails owner) {
         try {
@@ -29,7 +29,7 @@ public class ImageMockService {
     public MockMultipartFile mockAsMultipart() {
         try {
             String name = "image";
-            BufferedInputStream in = new BufferedInputStream(new URL(faker.avatar().image()).openStream());
+            BufferedInputStream in = new BufferedInputStream(new URL(fakerUtils.avatar().image()).openStream());
             return new MockMultipartFile(name, in);
         } catch (IOException e) {
             throw new MockImageException(e);

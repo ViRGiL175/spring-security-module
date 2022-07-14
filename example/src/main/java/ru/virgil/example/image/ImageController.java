@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
+import ru.virgil.utils.FileTypeService;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class ImageController {
     private final FileTypeService fileTypeService;
 
     // todo: переменный Media Type
-    @GetMapping(value = "/public/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping("/public/{imageName}")
     public ResponseEntity<byte[]> getPublic(@PathVariable String imageName) throws IOException {
         Path filePath = Paths.get(imageService.getPublic(imageName).getURI());
         byte[] imageBytes = IOUtils.toByteArray(new FileSystemResource(filePath).getInputStream());
@@ -35,7 +36,7 @@ public class ImageController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 
-    @GetMapping(value = "/protected/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping("/protected/{imageName}")
     public ResponseEntity<byte[]> getProtected(@PathVariable String imageName) throws IOException {
         Path filePath = Paths.get(imageService.getProtected(imageName).getURI());
         byte[] imageBytes = IOUtils.toByteArray(new FileSystemResource(filePath).getInputStream());
@@ -43,7 +44,7 @@ public class ImageController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 
-    @GetMapping(value = "/private/{imageUuid}")
+    @GetMapping("/private/{imageUuid}")
     public ResponseEntity<byte[]> getPrivate(@PathVariable UUID imageUuid) throws IOException {
         UserDetails currentUser = userDetailsService.getCurrentUser();
         Path filePath = Paths.get(imageService.getPrivate(imageUuid, currentUser).getURI());
