@@ -50,7 +50,7 @@ public class ImageService {
 
     public PrivateFileImage savePrivate(byte[] content, String imageName, UserDetails owner) throws IOException {
         Path imagePath = BASE_PRIVATE_IMAGE_PATH.resolve(owner.getUuid().toString());
-        String mimeType = fileTypeService.checkIfImage(content);
+        String mimeType = fileTypeService.getImageMimeType(content);
         PrivateFileImage privateFileImage = new PrivateFileImage();
         UUID uuid = privateFileImageRepository.save(privateFileImage).getUuid();
         String generatedName = "%s-%s.%s".formatted(imageName, uuid, mimeType.replace("image/", ""));

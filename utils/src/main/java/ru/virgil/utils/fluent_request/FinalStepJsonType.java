@@ -7,7 +7,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 @RequiredArgsConstructor
-public class FinalBuilderHavingBody {
+public class FinalStepJsonType<ResponseDto> implements FinalStep<ResponseDto> {
 
     private final RequestModel requestModel;
     private final Requester requester;
@@ -19,7 +19,7 @@ public class FinalBuilderHavingBody {
      * Иначе вечно будет напоминать о проверках на null.
      */
     @SuppressWarnings("ConstantConditions")
-    public <ResponseDto> ResponseDto expect(ResultMatcher... expectMatchers) throws Exception {
+    public ResponseDto expect(ResultMatcher... expectMatchers) throws Exception {
         requestModel.setResultMatchers(expectMatchers);
         MvcResult mvcResult = requester.makeRequest(requestModel);
         if (HttpStatus.valueOf(mvcResult.getResponse().getStatus()).isError()) {

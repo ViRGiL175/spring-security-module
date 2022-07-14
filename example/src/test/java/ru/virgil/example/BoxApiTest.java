@@ -40,9 +40,10 @@ public class BoxApiTest {
 
     @Test
     void getAll() throws Exception {
-        List<BoxDto> boxDtoList = requestUtil.get("/box?%s=%s&%s=%s"
+        List<BoxDto> boxDtoList = (List<BoxDto>) requestUtil.get("/box?%s=%s&%s=%s"
                         .formatted(BoxController.PAGE_PARAM, BOX_PAGE, BoxController.PAGE_SIZE_PARAM, BOX_PAGE_SIZE))
                 .receive(List.class, BoxDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(boxDtoList).isNotEmpty();
         Truth.assertThat(boxDtoList.stream().findAny().orElseThrow()).isInstanceOf(BoxDto.class);
@@ -50,8 +51,9 @@ public class BoxApiTest {
 
     @Test
     void get() throws Exception {
-        BoxDto boxDto = requestUtil.get("/box/%s".formatted(randomBoxUuid()))
+        BoxDto boxDto = (BoxDto) requestUtil.get("/box/%s".formatted(randomBoxUuid()))
                 .receive(BoxDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(boxDto.getWeight()).isAtLeast(10);
     }
@@ -61,18 +63,21 @@ public class BoxApiTest {
         BoxDto testDto = new BoxDto(null, "CREATED", 50000, 658);
         requestUtil.post("/box")
                 .exchange(testDto, BoxDto.class)
+                .and()
                 .expect(status().isBadRequest());
     }
 
     @Test
     void create() throws Exception {
         BoxDto testDto = new BoxDto(BoxType.USUAL, "CREATED", 50000, 658);
-        BoxDto createdDto = requestUtil.post("/box")
+        BoxDto createdDto = (BoxDto) requestUtil.post("/box")
                 .exchange(testDto, BoxDto.class)
+                .and()
                 .expect(status().isOk());
         assertUtils.partialEquals(createdDto, testDto);
-        BoxDto serverDto = requestUtil.get("/box/" + createdDto.getUuid())
+        BoxDto serverDto = (BoxDto) requestUtil.get("/box/" + createdDto.getUuid())
                 .receive(BoxDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(serverDto).isEqualTo(createdDto);
     }
@@ -80,12 +85,14 @@ public class BoxApiTest {
     @Test
     void edit() throws Exception {
         BoxDto testDto = new BoxDto(BoxType.USUAL, "EDITED", 78434, 456);
-        BoxDto changedDto = requestUtil.put("/box/%s".formatted(randomBoxUuid()))
+        BoxDto changedDto = (BoxDto) requestUtil.put("/box/%s".formatted(randomBoxUuid()))
                 .exchange(testDto, BoxDto.class)
+                .and()
                 .expect(status().isOk());
         assertUtils.partialEquals(changedDto, testDto);
-        BoxDto serverDto = requestUtil.get("/box/" + changedDto.getUuid())
+        BoxDto serverDto = (BoxDto) requestUtil.get("/box/" + changedDto.getUuid())
                 .receive(BoxDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(serverDto).isEqualTo(changedDto);
     }
@@ -94,8 +101,10 @@ public class BoxApiTest {
     void delete() throws Exception {
         UUID chatUuid = randomBoxUuid();
         requestUtil.delete("/box/%s".formatted(chatUuid))
+                .and()
                 .expect(status().isOk());
         requestUtil.get("/box/%s".formatted(chatUuid))
+                .and()
                 .expect(status().isNotFound());
     }
 
@@ -111,6 +120,7 @@ public class BoxApiTest {
         BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-USUAL-USER", 50000, 658);
         requestUtil.post("/box")
                 .send(testDto)
+                .and()
                 .expect(status().isForbidden());
     }
 
@@ -118,12 +128,14 @@ public class BoxApiTest {
     @WithMockFirebasePoliceman
     void createWeaponByPoliceman() throws Exception {
         BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-POLICEMAN", 50000, 658);
-        BoxDto createdDto = requestUtil.post("/box")
+        BoxDto createdDto = (BoxDto) requestUtil.post("/box")
                 .exchange(testDto, BoxDto.class)
+                .and()
                 .expect(status().isOk());
         assertUtils.partialEquals(createdDto, testDto);
-        BoxDto serverDto = requestUtil.get("/box/%s".formatted(createdDto.getUuid()))
+        BoxDto serverDto = (BoxDto) requestUtil.get("/box/%s".formatted(createdDto.getUuid()))
                 .receive(BoxDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(createdDto).isEqualTo(serverDto);
     }
@@ -132,21 +144,23 @@ public class BoxApiTest {
     void getAllWeaponsByUsualUser() throws Exception {
         requestUtil.get("/box/weapons?%s=%s&%s=%s"
                         .formatted(BoxController.PAGE_PARAM, BOX_PAGE, BoxController.PAGE_SIZE_PARAM, BOX_PAGE_SIZE))
+                .and()
                 .expect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     @WithMockFirebasePoliceman
     void getAllWeaponsByPoliceman() throws Exception {
-
         BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-POLICEMAN", 50000, 658);
-        BoxDto serverDto = requestUtil.post("/box")
+        BoxDto serverDto = (BoxDto) requestUtil.post("/box")
                 .exchange(testDto, BoxDto.class)
+                .and()
                 .expect(status().isOk());
         assertUtils.partialEquals(serverDto, testDto);
-        List<BoxDto> weaponDtoList = requestUtil.get("/box/weapons?%s=%s&%s=%s"
+        List<BoxDto> weaponDtoList = (List<BoxDto>) requestUtil.get("/box/weapons?%s=%s&%s=%s"
                         .formatted(BoxController.PAGE_PARAM, BOX_PAGE, BoxController.PAGE_SIZE_PARAM, BOX_PAGE_SIZE))
                 .receive(List.class, BoxDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(weaponDtoList).contains(serverDto);
     }

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.apachecommons.CommonsLog;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -78,6 +81,33 @@ public class TestUtils {
         }
     }
 
+    protected String extractPrettyResponse(MvcResult mvcResult)
+            throws UnsupportedEncodingException, JsonProcessingException {
+        String responseContent = mvcResult.getResponse().getContentAsString();
+        if (!isJson(responseContent)) {
+            return "BODY: content-type -> " + mvcResult.getResponse().getContentType();
+        }
+        responseContent = objectMapper.readTree(responseContent).toPrettyString();
+        responseContent = shortenJson(responseContent);
+        if (responseContent.isEmpty()) {
+            return "NONE";
+        }
+        return responseContent;
+    }
+
+    public boolean isJson(String jsonInString) {
+        try {
+            new JSONObject(jsonInString);
+        } catch (JSONException ex) {
+            try {
+                new JSONArray(jsonInString);
+            } catch (JSONException ex1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected String shortenJson(String requestContent) {
         String substring = requestContent.substring(0, Math.min(JSON_OUTPUT_LENGTH, requestContent.length()));
         if (substring.length() == JSON_OUTPUT_LENGTH) {
@@ -89,17 +119,6 @@ public class TestUtils {
                     """.formatted(JSON_OUTPUT_LENGTH);
         }
         return substring;
-    }
-
-    protected String extractPrettyResponse(MvcResult mvcResult) throws UnsupportedEncodingException,
-            JsonProcessingException {
-        String responseContent = mvcResult.getResponse().getContentAsString();
-        responseContent = objectMapper.readTree(responseContent).toPrettyString();
-        responseContent = shortenJson(responseContent);
-        if (responseContent.isEmpty()) {
-            return "NONE";
-        }
-        return responseContent;
     }
 
     protected String extractPrettyParams(MvcResult mvcResult) {

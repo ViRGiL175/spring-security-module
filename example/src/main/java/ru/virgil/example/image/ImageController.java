@@ -31,7 +31,7 @@ public class ImageController {
     public ResponseEntity<byte[]> getPublic(@PathVariable String imageName) throws IOException {
         Path filePath = Paths.get(imageService.getPublic(imageName).getURI());
         byte[] imageBytes = IOUtils.toByteArray(new FileSystemResource(filePath).getInputStream());
-        String imageMime = fileTypeService.checkIfImage(imageBytes);
+        String imageMime = fileTypeService.getImageMimeType(imageBytes);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 
@@ -39,7 +39,7 @@ public class ImageController {
     public ResponseEntity<byte[]> getProtected(@PathVariable String imageName) throws IOException {
         Path filePath = Paths.get(imageService.getProtected(imageName).getURI());
         byte[] imageBytes = IOUtils.toByteArray(new FileSystemResource(filePath).getInputStream());
-        String imageMime = fileTypeService.checkIfImage(imageBytes);
+        String imageMime = fileTypeService.getImageMimeType(imageBytes);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 
@@ -48,7 +48,7 @@ public class ImageController {
         UserDetails currentUser = userDetailsService.getCurrentUser();
         Path filePath = Paths.get(imageService.getPrivate(imageUuid, currentUser).getURI());
         byte[] imageBytes = IOUtils.toByteArray(new FileSystemResource(filePath).getInputStream());
-        String imageMime = fileTypeService.checkIfImage(imageBytes);
+        String imageMime = fileTypeService.getImageMimeType(imageBytes);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 

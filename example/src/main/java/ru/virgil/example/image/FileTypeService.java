@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class FileTypeService extends Tika {
 
     // todo: в утилиты
-    public String checkIfImage(byte[] content) {
+    public String getImageMimeType(byte[] content) {
         String mimeType = detect(content);
         String imageTypeRegex = "image/.*";
         if (!mimeType.matches(imageTypeRegex)) {

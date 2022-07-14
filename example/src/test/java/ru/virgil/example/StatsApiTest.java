@@ -24,16 +24,18 @@ public class StatsApiTest {
 
     @Test
     void getAll() throws Exception {
-        StatsDto statsDto = requestUtil.get("/stats/all")
+        StatsDto statsDto = (StatsDto) requestUtil.get("/stats/all")
                 .receive(StatsDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(statsDto).isNotNull();
     }
 
     @Test
     void getMy() throws Exception {
-        StatsDto statsDto = requestUtil.get("/stats/my")
+        StatsDto statsDto = (StatsDto) requestUtil.get("/stats/my")
                 .receive(StatsDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(statsDto).isNotNull();
     }

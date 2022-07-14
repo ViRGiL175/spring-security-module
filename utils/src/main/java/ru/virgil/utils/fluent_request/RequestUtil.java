@@ -11,37 +11,38 @@ public class RequestUtil {
     private final Requester requester;
     private final ObjectMapper objectMapper;
 
-    private BodyBuilderJson startJsonBuilding(RequestMethod requestMethod, String path) {
+    private BodyStepJson startJsonBuilding(RequestMethod requestMethod, String path) {
         RequestModel requestModel = new RequestModel();
         requestModel.setRequestMethod(requestMethod);
         requestModel.setUrl(path);
-        return new BodyBuilderJson(requestModel, requester, objectMapper);
+        return new BodyStepJson(requestModel, requester, objectMapper);
     }
 
-    private BodyBuilderMultipart startMultipartBuilding(RequestMethod requestMethod, String path) {
+    private BodyStepMulipartStart startMultipartBuilding(RequestMethod requestMethod, String path) {
         RequestModel requestModel = new RequestModel();
         requestModel.setRequestMethod(requestMethod);
         requestModel.setUrl(path);
-        return new BodyBuilderMultipart(requestModel, requester, objectMapper);
+        return new BodyStepMultipart(requestModel, requester, objectMapper);
     }
 
-    public BodyBuilderJson get(String path) {
+    public BodyStepJsonStart get(String path) {
         return startJsonBuilding(RequestMethod.GET, path);
     }
 
-    public BodyBuilderJson post(String path) {
+    public BodyStepJsonStart post(String path) {
         return startJsonBuilding(RequestMethod.POST, path);
     }
 
-    public BodyBuilderJson put(String path) {
+    public BodyStepJsonStart put(String path) {
         return startJsonBuilding(RequestMethod.PUT, path);
     }
 
-    public BodyBuilderJson delete(String path) {
+    public BodyStepJsonStart delete(String path) {
         return startJsonBuilding(RequestMethod.DELETE, path);
     }
 
-    public BodyBuilderMultipart multipart(String path) {
-        return startMultipartBuilding(RequestMethod.MULTIPART, path);
+    // todo: get мультипарта
+    public BodyStepMulipartStart postMultipart(String path) {
+        return startMultipartBuilding(RequestMethod.POST_MULTIPART, path);
     }
 }

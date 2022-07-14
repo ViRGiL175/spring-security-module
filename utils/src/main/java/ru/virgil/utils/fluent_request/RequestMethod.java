@@ -6,5 +6,5 @@ enum RequestMethod {
     POST,
     PUT,
     DELETE,
-    MULTIPART,
+    POST_MULTIPART,
 }

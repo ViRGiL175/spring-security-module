@@ -40,11 +40,13 @@ public class BuyingOrderApiTest {
         URIBuilder uriBuilder = new URIBuilder().setPath("/buying_order")
                 .addParameter(BoxController.PAGE_PARAM, String.valueOf(PAGE))
                 .addParameter(BoxController.PAGE_SIZE_PARAM, String.valueOf(PAGE_SIZE));
-        List<BuyingOrderDto> buyingOrderDtoList = requestUtil.get(uriBuilder.toString())
+        List<BuyingOrderDto> buyingOrderDtoList = (List<BuyingOrderDto>) requestUtil.get(uriBuilder.toString())
                 .receive(List.class, BuyingOrderDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(buyingOrderDtoList.stream().findAny().orElseThrow()).isInstanceOf(BuyingOrderDto.class);
 
+        // todo: сначала обращаемся напрямую к серверу, а потом делаем запрос, не одновременно
         // todo: почему не проходит проверка?
         //        BuyingOrderDto randomBuyingOrderDto = requestUtil.get("/buying_order/%s".formatted(randomOrderUuid()))
         //                .receive(BuyingOrderDto.class)
@@ -55,8 +57,9 @@ public class BuyingOrderApiTest {
 
     @Test
     void get() throws Exception {
-        BuyingOrderDto randomBuyingOrderDto = requestUtil.get("/buying_order/%s".formatted(randomOrderUuid()))
+        BuyingOrderDto randomBuyingOrderDto = (BuyingOrderDto) requestUtil.get("/buying_order/%s".formatted(randomOrderUuid()))
                 .receive(BuyingOrderDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(randomBuyingOrderDto.getDescription()).isNotEmpty();
     }
@@ -67,8 +70,9 @@ public class BuyingOrderApiTest {
                 .addParameter(BoxController.PAGE_PARAM, String.valueOf(PAGE))
                 .addParameter(BoxController.PAGE_SIZE_PARAM, String.valueOf(PAGE_SIZE))
                 .toString();
-        List<TruckDto> truckDtoList = requestUtil.get(uri)
+        List<TruckDto> truckDtoList = (List<TruckDto>) requestUtil.get(uri)
                 .receive(List.class, TruckDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(truckDtoList.stream().findAny().orElseThrow()).isInstanceOf(TruckDto.class);
     }

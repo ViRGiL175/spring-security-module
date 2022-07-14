@@ -29,7 +29,7 @@ class Requester {
             case POST -> MockMvcRequestBuilders.post(url);
             case PUT -> MockMvcRequestBuilders.put(url);
             case DELETE -> MockMvcRequestBuilders.delete(url);
-            case MULTIPART -> MockMvcRequestBuilders.multipart(url);
+            case POST_MULTIPART -> MockMvcRequestBuilders.multipart(url);
         };
     }
 

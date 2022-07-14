@@ -24,8 +24,9 @@ public class UserApiTest {
 
     @Test
     void get() throws Exception {
-        UserDetailsDto userDetailsDto = requestUtil.get("/user_details")
+        UserDetailsDto userDetailsDto = (UserDetailsDto) requestUtil.get("/user_details")
                 .receive(UserDetailsDto.class)
+                .and()
                 .expect(status().isOk());
         Truth.assertThat(userDetailsDto).isNotNull();
     }
