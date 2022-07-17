@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
-import ru.virgil.utils.FileTypeService;
+import ru.virgil.utils.image.FileTypeService;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -47,17 +47,17 @@ public class ImageController {
     @GetMapping("/private/{imageUuid}")
     public ResponseEntity<byte[]> getPrivate(@PathVariable UUID imageUuid) throws IOException {
         UserDetails currentUser = userDetailsService.getCurrentUser();
-        Path filePath = Paths.get(imageService.getPrivate(imageUuid, currentUser).getURI());
+        Path filePath = Paths.get(imageService.getPrivate(currentUser, imageUuid).getURI());
         byte[] imageBytes = IOUtils.toByteArray(new FileSystemResource(filePath).getInputStream());
         String imageMime = fileTypeService.getImageMimeType(imageBytes);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 
     @PostMapping("/private")
-    public PrivateFileImageDto postPrivate(@RequestParam MultipartFile image,
+    public PrivateImageFileDto postPrivate(@RequestParam MultipartFile image,
             @Nullable @RequestParam(required = false) String imageName) throws IOException {
         UserDetails currentUser = userDetailsService.getCurrentUser();
-        PrivateFileImage privateFileImage = imageService.savePrivate(image.getBytes(),
+        PrivateImageFile privateFileImage = imageService.savePrivate(image.getBytes(),
                 imageName == null ? "image" : imageName, currentUser);
         return privateFileImageMapper.toDto(privateFileImage);
     }

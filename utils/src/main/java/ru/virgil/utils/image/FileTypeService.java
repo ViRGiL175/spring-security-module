@@ -1,4 +1,4 @@
-package ru.virgil.utils;
+package ru.virgil.utils.image;
 
 import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;

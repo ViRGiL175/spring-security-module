@@ -1,4 +1,4 @@
-package ru.virgil.example.image;
+package ru.virgil.utils.image;
 
 import lombok.experimental.StandardException;
 

@@ -9,7 +9,7 @@ import ru.virgil.example.system.IdentifiedDto;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class PrivateFileImageDto extends IdentifiedDto {
+public class PrivateImageFileDto extends IdentifiedDto {
 
     private String name;
 

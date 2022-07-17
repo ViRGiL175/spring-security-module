@@ -1,9 +1,8 @@
-package ru.virgil.example.image;
+package ru.virgil.utils.image;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-import ru.virgil.example.user.UserDetails;
 import ru.virgil.utils.FakerUtils;
 
 import java.io.BufferedInputStream;
@@ -12,15 +11,15 @@ import java.net.URL;
 
 @Service
 @RequiredArgsConstructor
-public class ImageMockService {
+public class ImageMockService<Owner extends IBaseEntity, Image extends IPrivateImage<Owner>> {
 
-    // todo: в утилиты
-    private final ImageService imageService;
+    public static final String IMAGE_NAME = "image";
+    private final ImageService<Owner, Image> imageService;
     private final FakerUtils fakerUtils;
 
-    public PrivateFileImage mockImage(UserDetails owner) {
+    public Image mockImage(Owner owner) {
         try {
-            return imageService.savePrivate(mockAsMultipart().getBytes(), "image", owner);
+            return imageService.savePrivate(mockAsMultipart().getBytes(), IMAGE_NAME, owner);
         } catch (IOException e) {
             throw new MockImageException(e);
         }
@@ -28,9 +27,8 @@ public class ImageMockService {
 
     public MockMultipartFile mockAsMultipart() {
         try {
-            String name = "image";
             BufferedInputStream in = new BufferedInputStream(new URL(fakerUtils.avatar().image()).openStream());
-            return new MockMultipartFile(name, in);
+            return new MockMultipartFile(IMAGE_NAME, in);
         } catch (IOException e) {
             throw new MockImageException(e);
         }
