@@ -18,7 +18,7 @@ public class RequestUtil {
         return new BodyStepJson(requestModel, requester, objectMapper);
     }
 
-    private BodyStepMulipartStart startMultipartBuilding(RequestMethod requestMethod, String path) {
+    private BodyStepMultipartStart startMultipartBuilding(RequestMethod requestMethod, String path) {
         RequestModel requestModel = new RequestModel();
         requestModel.setRequestMethod(requestMethod);
         requestModel.setUrl(path);
@@ -40,9 +40,7 @@ public class RequestUtil {
     public BodyStepJsonStart delete(String path) {
         return startJsonBuilding(RequestMethod.DELETE, path);
     }
-
-    // todo: get мультипарта
-    public BodyStepMulipartStart postMultipart(String path) {
+    public BodyStepMultipartStart postMultipart(String path) {
         return startMultipartBuilding(RequestMethod.POST_MULTIPART, path);
     }
 }

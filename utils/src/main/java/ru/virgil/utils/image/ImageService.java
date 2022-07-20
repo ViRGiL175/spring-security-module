@@ -25,7 +25,6 @@ import java.util.UUID;
 @CommonsLog
 public abstract class ImageService<Owner extends IBaseEntity, PrivateImage extends IPrivateImage<Owner>> {
 
-    // todo: в утилиты
     public static final Path BASE_PRIVATE_IMAGE_PATH = Path.of("images", "private", "users");
     public static final Path BASE_PROTECTED_IMAGE_PATH = Path.of("images", "protected");
     public static final Path BASE_PUBLIC_IMAGE_PATH = Path.of("images", "public");

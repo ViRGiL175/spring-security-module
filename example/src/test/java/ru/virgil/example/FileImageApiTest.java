@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockFirebaseUser
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class FileImageApiTest {
@@ -32,6 +31,7 @@ public class FileImageApiTest {
     private final FileTypeService fileTypeService;
 
     @Test
+    @WithMockFirebaseUser
     void postPrivateImage() throws Exception {
         PrivateImageFileDto privateImageFileDto = (PrivateImageFileDto) requestUtil.postMultipart("/image/private")
                 .file(imageMockService.mockAsMultipart())
@@ -42,6 +42,7 @@ public class FileImageApiTest {
     }
 
     @Test
+    @WithMockFirebaseUser
     public void getPrivateImage() throws Exception {
         PrivateImageFileDto privateImageFileDto = (PrivateImageFileDto) requestUtil.postMultipart("/image/private")
                 .file(imageMockService.mockAsMultipart())
@@ -57,6 +58,7 @@ public class FileImageApiTest {
     }
 
     @Test
+    @WithMockFirebaseUser
     public void getProtectedImage() throws Exception {
         byte[] byteArray = (byte[]) requestUtil.get("/image/protected/image.jpg")
                 .receiveAsBytes()

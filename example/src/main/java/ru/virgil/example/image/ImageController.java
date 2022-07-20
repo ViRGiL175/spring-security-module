@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.virgil.example.user.UserDetails;
@@ -27,7 +28,6 @@ public class ImageController {
     private final PrivateFileImageMapper privateFileImageMapper;
     private final FileTypeService fileTypeService;
 
-    // todo: переменный Media Type
     @GetMapping("/public/{imageName}")
     public ResponseEntity<byte[]> getPublic(@PathVariable String imageName) throws IOException {
         Path filePath = Paths.get(imageService.getPublic(imageName).getURI());
@@ -36,6 +36,7 @@ public class ImageController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 
+    @PreAuthorize("isFullyAuthenticated()")
     @GetMapping("/protected/{imageName}")
     public ResponseEntity<byte[]> getProtected(@PathVariable String imageName) throws IOException {
         Path filePath = Paths.get(imageService.getProtected(imageName).getURI());
@@ -44,6 +45,7 @@ public class ImageController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 
+    @PreAuthorize("isFullyAuthenticated()")
     @GetMapping("/private/{imageUuid}")
     public ResponseEntity<byte[]> getPrivate(@PathVariable UUID imageUuid) throws IOException {
         UserDetails currentUser = userDetailsService.getCurrentUser();
@@ -53,6 +55,7 @@ public class ImageController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(imageMime)).body(imageBytes);
     }
 
+    @PreAuthorize("isFullyAuthenticated()")
     @PostMapping("/private")
     public PrivateImageFileDto postPrivate(@RequestParam MultipartFile image,
             @Nullable @RequestParam(required = false) String imageName) throws IOException {

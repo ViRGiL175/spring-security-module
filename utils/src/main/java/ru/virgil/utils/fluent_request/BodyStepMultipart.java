@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class BodyStepMultipart implements BodyStepMulipartStart, BodyStep {
+public class BodyStepMultipart implements BodyStepMultipartStart, BodyStep {
 
     private final RequestModel requestModel;
     private final Requester requester;
