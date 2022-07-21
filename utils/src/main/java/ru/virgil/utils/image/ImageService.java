@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
 @RequiredArgsConstructor
 @CommonsLog
 public abstract class ImageService<Owner extends IBaseEntity, PrivateImage extends IPrivateImage<Owner>> {

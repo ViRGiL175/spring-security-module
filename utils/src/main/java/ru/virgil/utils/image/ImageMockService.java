@@ -2,16 +2,14 @@ package ru.virgil.utils.image;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.stereotype.Service;
 import ru.virgil.utils.FakerUtils;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 
-@Service
 @RequiredArgsConstructor
-public class ImageMockService<Owner extends IBaseEntity, Image extends IPrivateImage<Owner>> {
+public abstract class ImageMockService<Owner extends IBaseEntity, Image extends IPrivateImage<Owner>> {
 
     public static final String IMAGE_NAME = "image";
     private final ImageService<Owner, Image> imageService;
