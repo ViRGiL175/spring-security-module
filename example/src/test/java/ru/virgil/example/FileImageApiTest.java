@@ -17,6 +17,8 @@ import ru.virgil.utils.fluent_request.RequestUtil;
 import ru.virgil.utils.image.FileTypeService;
 import ru.virgil.utils.image.ImageMockService;
 
+import java.util.UUID;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -74,6 +76,20 @@ public class FileImageApiTest {
                 .and()
                 .expect(status().isOk());
         Truth.assertThat(fileTypeService.getImageMimeType(byteArray)).contains("image/");
+    }
+
+    @Test
+    @WithMockFirebaseUser
+    void getNotExisting() throws Exception {
+        requestUtil.get("/image/public/not_existing.jpg")
+                .and()
+                .expect(status().isNotFound());
+        requestUtil.get("/image/protected/not_existing.jpg")
+                .and()
+                .expect(status().isNotFound());
+        requestUtil.get("/image/protected/%s".formatted(UUID.randomUUID()))
+                .and()
+                .expect(status().isNotFound());
     }
 
     @AfterAll
