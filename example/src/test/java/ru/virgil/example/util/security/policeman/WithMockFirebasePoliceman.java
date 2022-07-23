@@ -1,4 +1,4 @@
-package ru.virgil.example.util;
+package ru.virgil.example.util.security.policeman;
 
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithSecurityContext;
@@ -8,10 +8,10 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(
-        factory = TestSecurityContextFactory.class,
+        factory = TestSecurityContextFactoryPoliceman.class,
         setupBefore = TestExecutionEvent.TEST_METHOD
 )
-public @interface WithMockFirebaseUser {
+public @interface WithMockFirebasePoliceman {
 
     String firebaseUserId() default "firebase-user-id";
 

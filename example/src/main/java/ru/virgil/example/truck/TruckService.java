@@ -1,24 +1,20 @@
 package ru.virgil.example.truck;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import ru.virgil.example.order.BuyingOrder;
-import ru.virgil.example.order.BuyingOrderService;
+import ru.virgil.example.system.SimpleJpaAccess;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class TruckService {
+public class TruckService implements SimpleJpaAccess<Truck, UUID> {
 
-    @Getter
     private final TruckRepository repository;
-    private final BuyingOrderService buyingOrderService;
 
     public Truck get(UUID uuid) {
         return repository.findById(uuid).orElseThrow();
@@ -28,18 +24,12 @@ public class TruckService {
         return repository.findAllByBuyingOrder(buyingOrder, PageRequest.of(page, size));
     }
 
-    public long countMy() {
-        List<BuyingOrder> buyingOrders = buyingOrderService.getAll(0, Integer.MAX_VALUE);
-        Set<Truck> trucksSet = new HashSet<>();
-        buyingOrders.forEach(buyingOrder -> {
-            List<Truck> trucks = repository.findAllByBuyingOrder(buyingOrder, PageRequest.of(0, Integer.MAX_VALUE));
-            trucksSet.addAll(trucks);
-        });
-        return trucksSet.size();
-    }
-
-    public Truck getRandom() {
+    public Truck assignTruck() {
         return repository.findAll().stream().findAny().orElseThrow();
     }
 
+    @Override
+    public JpaRepository<Truck, UUID> getRepository() {
+        return repository;
+    }
 }

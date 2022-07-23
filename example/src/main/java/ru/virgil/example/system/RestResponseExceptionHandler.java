@@ -17,4 +17,9 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
 
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = AssertionError.class)
+    public void handleBadRequest() {
+
+    }
 }

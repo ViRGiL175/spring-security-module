@@ -7,9 +7,7 @@ import ru.virgil.example.system.IdentifiedEntity;
 import ru.virgil.example.truck.Truck;
 import ru.virgil.example.user.UserDetails;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @EqualsAndHashCode(callSuper = true)
@@ -19,6 +17,9 @@ public class Box extends IdentifiedEntity {
 
     @ManyToOne
     private UserDetails owner;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BoxType type = BoxType.USUAL;
     @ManyToOne(cascade = CascadeType.REMOVE)
     private Truck truck;
     private String description;

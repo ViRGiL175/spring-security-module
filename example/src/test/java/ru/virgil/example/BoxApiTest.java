@@ -1,6 +1,5 @@
 package ru.virgil.example;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -8,19 +7,19 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.virgil.example.box.BoxController;
 import ru.virgil.example.box.BoxDto;
 import ru.virgil.example.box.BoxService;
+import ru.virgil.example.box.BoxType;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
-import ru.virgil.example.util.WithMockFirebaseUser;
-import ru.virgil.utils.TestUtils;
+import ru.virgil.example.util.security.policeman.WithMockFirebasePoliceman;
+import ru.virgil.example.util.security.user.WithMockFirebaseUser;
+import ru.virgil.utils.AssertUtils;
+import ru.virgil.utils.fluent_request.RequestUtil;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,106 +33,135 @@ public class BoxApiTest {
 
     public static final int BOX_PAGE = 0;
     public static final int BOX_PAGE_SIZE = 10;
-    private final MockMvc mockMvc;
     private final BoxService boxService;
     private final UserDetailsService userDetailsService;
-    private final TestUtils testUtils;
-    private final ObjectMapper jackson;
+    private final AssertUtils assertUtils;
+    private final RequestUtil requestUtil;
 
     @Test
     void getAll() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box")
-                        .queryParam(BoxController.PAGE_PARAM, String.valueOf(BOX_PAGE))
-                        .queryParam(BoxController.PAGE_SIZE_PARAM, String.valueOf(BOX_PAGE_SIZE)))
-                .andDo(testUtils::printResponse)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        // todo: извлечение коллекции
-        Truth.assertThat(mvcResult.getResponse().getContentAsString()).isNotEmpty();
+        List<BoxDto> boxDtoList = (List<BoxDto>) requestUtil.get("/box?%s=%s&%s=%s"
+                        .formatted(BoxController.PAGE_PARAM, BOX_PAGE, BoxController.PAGE_SIZE_PARAM, BOX_PAGE_SIZE))
+                .receive(List.class, BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        Truth.assertThat(boxDtoList).isNotEmpty();
+        Truth.assertThat(boxDtoList.stream().findAny().orElseThrow()).isInstanceOf(BoxDto.class);
     }
 
     @Test
     void get() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/%s".formatted(randomBoxUuid())))
-                .andDo(testUtils::printResponse)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-        BoxDto boxDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
+        BoxDto boxDto = (BoxDto) requestUtil.get("/box/%s".formatted(randomBoxUuid()))
+                .receive(BoxDto.class)
+                .and()
+                .expect(status().isOk());
         Truth.assertThat(boxDto.getWeight()).isAtLeast(10);
     }
 
     @Test
+    void createWithoutType() throws Exception {
+        BoxDto testDto = new BoxDto(null, "CREATED", 50000, 658);
+        requestUtil.post("/box")
+                .exchange(testDto, BoxDto.class)
+                .and()
+                .expect(status().isBadRequest());
+    }
+
+    @Test
     void create() throws Exception {
-        BoxDto testDto = new BoxDto();
-        String testValue = "CREATED";
-        testDto.setDescription(testValue);
-        testDto.setPrice(50000);
-        testDto.setWeight(658);
-        String dtoJson = jackson.writeValueAsString(testDto);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/box")
-                        .content(dtoJson)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(testUtils::printResponse)
-                .andExpect(status().isOk())
-                .andReturn();
-        BoxDto createdDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getWeight()).isEqualTo(createdDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(createdDto.getDescription());
-        Truth.assertThat(testDto.getPrice()).isEqualTo(createdDto.getPrice());
-        mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/" + createdDto.getUuid()))
-                .andDo(testUtils::printResponse)
-                .andExpect(status().isOk())
-                .andReturn();
-        BoxDto requestedDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getPrice()).isEqualTo(requestedDto.getPrice());
-        Truth.assertThat(testDto.getWeight()).isEqualTo(requestedDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(requestedDto.getDescription());
+        BoxDto testDto = new BoxDto(BoxType.USUAL, "CREATED", 50000, 658);
+        BoxDto createdDto = (BoxDto) requestUtil.post("/box")
+                .exchange(testDto, BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        assertUtils.partialEquals(createdDto, testDto);
+        BoxDto serverDto = (BoxDto) requestUtil.get("/box/" + createdDto.getUuid())
+                .receive(BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        Truth.assertThat(serverDto).isEqualTo(createdDto);
     }
 
     @Test
     void edit() throws Exception {
-        BoxDto testDto = new BoxDto();
-        String testValue = "EDITED";
-        testDto.setDescription(testValue);
-        testDto.setWeight(456);
-        testDto.setPrice(78434);
-        String chatDtoJson = jackson.writeValueAsString(testDto);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/box/%s".formatted(randomBoxUuid()))
-                        .content(chatDtoJson)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(testUtils::printResponse)
-                .andExpect(status().isOk())
-                .andReturn();
-        BoxDto editedDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getWeight()).isEqualTo(editedDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(editedDto.getDescription());
-        Truth.assertThat(testDto.getPrice()).isEqualTo(editedDto.getPrice());
-        mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/box/" + editedDto.getUuid()))
-                .andDo(testUtils::printResponse)
-                .andExpect(status().isOk())
-                .andReturn();
-        BoxDto requestedDto = testUtils.extractDtoFromResponse(mvcResult, BoxDto.class);
-        Truth.assertThat(testDto.getPrice()).isEqualTo(requestedDto.getPrice());
-        Truth.assertThat(testDto.getWeight()).isEqualTo(requestedDto.getWeight());
-        Truth.assertThat(testDto.getDescription()).isEqualTo(requestedDto.getDescription());
+        BoxDto testDto = new BoxDto(BoxType.USUAL, "EDITED", 78434, 456);
+        BoxDto changedDto = (BoxDto) requestUtil.put("/box/%s".formatted(randomBoxUuid()))
+                .exchange(testDto, BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        assertUtils.partialEquals(changedDto, testDto);
+        BoxDto serverDto = (BoxDto) requestUtil.get("/box/" + changedDto.getUuid())
+                .receive(BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        Truth.assertThat(serverDto).isEqualTo(changedDto);
     }
 
     @Test
     void delete() throws Exception {
         UUID chatUuid = randomBoxUuid();
-        mockMvc.perform(MockMvcRequestBuilders.delete("/box/%s".formatted(chatUuid)))
-                .andDo(testUtils::printResponse)
-                .andExpect(status().isOk());
-        mockMvc.perform(MockMvcRequestBuilders.get("/box/%s".formatted(chatUuid)))
-                .andDo(testUtils::printResponse)
-                .andExpect(status().isNotFound());
+        requestUtil.delete("/box/%s".formatted(chatUuid))
+                .and()
+                .expect(status().isOk());
+        requestUtil.get("/box/%s".formatted(chatUuid))
+                .and()
+                .expect(status().isNotFound());
     }
 
     private UUID randomBoxUuid() {
         UserDetails currentUser = userDetailsService.getCurrentUser();
-        return boxService.getRepository().findAllByOwner(currentUser).stream()
+        return boxService.getAll(currentUser, 0, Integer.MAX_VALUE).stream()
                 .findAny().orElseThrow()
                 .getUuid();
     }
 
+    @Test
+    void createWeaponByUsualUser() throws Exception {
+        BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-USUAL-USER", 50000, 658);
+        requestUtil.post("/box")
+                .send(testDto)
+                .and()
+                .expect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockFirebasePoliceman
+    void createWeaponByPoliceman() throws Exception {
+        BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-POLICEMAN", 50000, 658);
+        BoxDto createdDto = (BoxDto) requestUtil.post("/box")
+                .exchange(testDto, BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        assertUtils.partialEquals(createdDto, testDto);
+        BoxDto serverDto = (BoxDto) requestUtil.get("/box/%s".formatted(createdDto.getUuid()))
+                .receive(BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        Truth.assertThat(createdDto).isEqualTo(serverDto);
+    }
+
+    @Test
+    void getAllWeaponsByUsualUser() throws Exception {
+        requestUtil.get("/box/weapons?%s=%s&%s=%s"
+                        .formatted(BoxController.PAGE_PARAM, BOX_PAGE, BoxController.PAGE_SIZE_PARAM, BOX_PAGE_SIZE))
+                .and()
+                .expect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithMockFirebasePoliceman
+    void getAllWeaponsByPoliceman() throws Exception {
+        BoxDto testDto = new BoxDto(BoxType.WEAPON, "CREATED-BY-POLICEMAN", 50000, 658);
+        BoxDto serverDto = (BoxDto) requestUtil.post("/box")
+                .exchange(testDto, BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        assertUtils.partialEquals(serverDto, testDto);
+        List<BoxDto> weaponDtoList = (List<BoxDto>) requestUtil.get("/box/weapons?%s=%s&%s=%s"
+                        .formatted(BoxController.PAGE_PARAM, BOX_PAGE, BoxController.PAGE_SIZE_PARAM, BOX_PAGE_SIZE))
+                .receive(List.class, BoxDto.class)
+                .and()
+                .expect(status().isOk());
+        Truth.assertThat(weaponDtoList).contains(serverDto);
+    }
 }

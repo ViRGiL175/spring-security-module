@@ -22,3 +22,4 @@ security:
     web-credentials-file-path: credentials/firebase-web-credentials.json
   anonymous-paths:
     - "/actuator/**"
+    - "/image/public/**"

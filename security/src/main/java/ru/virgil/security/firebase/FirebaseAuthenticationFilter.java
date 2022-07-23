@@ -29,7 +29,7 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
     public static final String FIREBASE_AUTH_TOKEN_CREDENTIAL = "firebase_auth_token";
     public static final AuthorizationHeader AUTHORIZATION_HEADER_EXAMPLE = new AuthorizationHeader(AuthMethods.FIREBASE,
             Map.of(FIREBASE_UID_CREDENTIAL, "value", FIREBASE_AUTH_TOKEN_CREDENTIAL, "value"));
-    public static final List<GrantedAuthority> DEFAULT_AUTHORITIES = List.of(new SimpleGrantedAuthority("USER"));
+    public static final List<GrantedAuthority> DEFAULT_AUTHORITIES = List.of(new SimpleGrantedAuthority("ROLE_USER"));
     // todo: перейти на сериализацию CSV или похожую
     private final ObjectMapper serializer = new ObjectMapper();
 

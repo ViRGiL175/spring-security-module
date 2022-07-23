@@ -26,4 +26,3 @@ public class Truck extends IdentifiedEntity {
     private BuyingOrder buyingOrder;
 
 }
-
