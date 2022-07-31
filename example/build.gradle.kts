@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id("org.springframework.boot") version "2.6.9"
+    id("org.springframework.boot") version "2.6.10"
     id("io.spring.dependency-management") version "1.0.12.RELEASE"
     id("java")
 }
@@ -68,6 +68,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.security:spring-security-test")
     implementation("org.springframework.session:spring-session-core")
     runtimeOnly("org.postgresql:postgresql")
     implementation("com.h2database:h2")

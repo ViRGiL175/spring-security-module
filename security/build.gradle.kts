@@ -3,13 +3,13 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id("org.springframework.boot") version "2.6.9" apply false
+    id("org.springframework.boot") version "2.6.10" apply false
     id("io.spring.dependency-management") version "1.0.12.RELEASE"
     id("java-library")
 }
 
 group = "ru.virgil"
-version = "0.3.0-SNAPSHOT"
+version = "0.3.1-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -56,6 +56,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.session:spring-session-core")
+    implementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.security:spring-security-test")
     runtimeOnly("org.postgresql:postgresql")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
