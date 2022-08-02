@@ -48,7 +48,7 @@ dependencies {
     // Modules
     implementation(project(":security"))
     implementation(project(":utils"))
-    testImplementation(project(":utils"))
+    testImplementation(project(":test-utils"))
 
     // Third party dependencies
     implementation("com.google.truth:truth:1.1.3")

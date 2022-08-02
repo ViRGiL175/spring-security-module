@@ -15,7 +15,7 @@ import ru.virgil.example.truck.TruckDto;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
-import ru.virgil.utils.fluent_request.RequestUtil;
+import ru.virgil.testutils.fluent_request.RequestUtil;
 
 import java.util.List;
 import java.util.UUID;

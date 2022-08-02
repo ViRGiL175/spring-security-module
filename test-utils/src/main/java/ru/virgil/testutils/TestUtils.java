@@ -1,4 +1,4 @@
-package ru.virgil.utils;
+package ru.virgil.testutils;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @CommonsLog
 public class TestUtils {
 
+    // todo: оставить тут только работу с парсингом
     public static final int JSON_OUTPUT_LENGTH = 2048;
     public static final String TEST_RESULTS_TEMPLATE = """
                      

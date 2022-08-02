@@ -1,4 +1,4 @@
-package ru.virgil.utils;
+package ru.virgil.testutils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "ru.virgil"
-version = "0.6.0-SNAPSHOT"
+version = "0.0.1-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -38,9 +38,6 @@ tasks.withType<Test> {
 }
 
 dependencies {
-
-    implementation(project(":test-utils"))
-
     // Spring controlled dependencies
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")

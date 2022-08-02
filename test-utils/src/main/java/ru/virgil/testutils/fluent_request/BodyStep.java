@@ -1,4 +1,4 @@
-package ru.virgil.utils.fluent_request;
+package ru.virgil.testutils.fluent_request;
 
 public interface BodyStep {
 
