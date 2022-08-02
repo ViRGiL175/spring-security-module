@@ -8,6 +8,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import ru.virgil.example.box.BoxController;
 import ru.virgil.example.order.BuyingOrderDto;
 import ru.virgil.example.order.BuyingOrderService;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockFirebaseUser
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ComponentScan("ru.virgil.test_utils")
 public class BuyingOrderApiTest {
 
     public static final int PAGE = 0;

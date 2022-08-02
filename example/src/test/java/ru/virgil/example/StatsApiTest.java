@@ -7,6 +7,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import ru.virgil.example.stats.StatsDto;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
 import ru.virgil.test_utils.fluent_request.RequestUtil;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockFirebaseUser
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ComponentScan("ru.virgil.test_utils")
 public class StatsApiTest {
 
     private final RequestUtil requestUtil;

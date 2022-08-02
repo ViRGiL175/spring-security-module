@@ -8,6 +8,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import ru.virgil.example.image.ImageService;
 import ru.virgil.example.image.PrivateImageFile;
 import ru.virgil.example.image.PrivateImageFileDto;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ComponentScan("ru.virgil.test_utils")
 public class FileImageApiTest {
 
     private final ImageMockService<UserDetails, PrivateImageFile> imageMockService;
