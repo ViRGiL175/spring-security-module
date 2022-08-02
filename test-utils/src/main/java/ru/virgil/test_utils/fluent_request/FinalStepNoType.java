@@ -1,4 +1,4 @@
-package ru.virgil.testutils.fluent_request;
+package ru.virgil.test_utils.fluent_request;
 
 import com.google.common.truth.Truth;
 import lombok.RequiredArgsConstructor;

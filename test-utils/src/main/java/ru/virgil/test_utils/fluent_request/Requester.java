@@ -1,4 +1,4 @@
-package ru.virgil.testutils.fluent_request;
+package ru.virgil.test_utils.fluent_request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.virgil.testutils.TestUtils;
+import ru.virgil.test_utils.TestUtils;
 
 import java.util.Optional;
 

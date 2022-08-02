@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.virgil.example.user.UserDetailsDto;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
-import ru.virgil.testutils.fluent_request.RequestUtil;
+import ru.virgil.test_utils.fluent_request.RequestUtil;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

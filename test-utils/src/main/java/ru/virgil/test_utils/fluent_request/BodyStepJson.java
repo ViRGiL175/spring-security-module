@@ -1,15 +1,14 @@
-package ru.virgil.testutils.fluent_request;
+package ru.virgil.test_utils.fluent_request;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mock.web.MockMultipartFile;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class BodyStepMultipart implements BodyStepMultipartStart, BodyStep {
+public class BodyStepJson implements BodyStepJsonStart, BodyStep {
 
     private final RequestModel requestModel;
     private final Requester requester;
@@ -18,23 +17,34 @@ public class BodyStepMultipart implements BodyStepMultipartStart, BodyStep {
     private JavaType byteArrayJavaType;
 
     @Override
-    public BodyStepMultipart file(MockMultipartFile mockMultipartFile) throws Exception {
-        requestModel.setMockMultipartFile(mockMultipartFile);
+    public BodyStepJson send(Object dto) {
+        requestModel.setRequestBody(dto);
         return this;
     }
 
-    public BodyStepMultipart receive(Class<?> responseClass, Class<?>... responseClasses) {
+    @Override
+    public BodyStepJson receive(Class<?> responseClass, Class<?>... responseClasses) {
         JavaType javaType = objectMapper.getTypeFactory().constructParametricType(responseClass, responseClasses);
         requestModel.setResponseJavaType(javaType);
         return this;
     }
 
-    public BodyStepMultipart receiveBytes() {
+    @Override
+    public BodyStepJson receiveAsBytes() {
         byteArrayJavaType = objectMapper.getTypeFactory().constructParametricType(List.class, Byte.class);
         requestModel.setResponseJavaType(byteArrayJavaType);
         return this;
     }
 
+    @Override
+    public BodyStepJson exchange(Object dto, Class<?> responseClass, Class<?>... responseClasses) {
+        requestModel.setRequestBody(dto);
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(responseClass, responseClasses);
+        requestModel.setResponseJavaType(javaType);
+        return this;
+    }
+
+    @Override
     public FinalStep<?> and() throws Exception {
         if (requestModel.getResponseJavaType() == null) {
             return new FinalStepNoType(requestModel, requester);

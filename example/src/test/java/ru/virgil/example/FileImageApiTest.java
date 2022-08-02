@@ -13,7 +13,7 @@ import ru.virgil.example.image.PrivateImageFile;
 import ru.virgil.example.image.PrivateImageFileDto;
 import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
-import ru.virgil.testutils.fluent_request.RequestUtil;
+import ru.virgil.test_utils.fluent_request.RequestUtil;
 import ru.virgil.utils.image.FileTypeService;
 import ru.virgil.utils.image.ImageMockService;
 

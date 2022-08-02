@@ -1,4 +1,4 @@
-package ru.virgil.testutils;
+package ru.virgil.test_utils;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

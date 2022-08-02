@@ -7,7 +7,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.virgil.example.box.BoxController;
@@ -18,8 +17,8 @@ import ru.virgil.example.user.UserDetails;
 import ru.virgil.example.user.UserDetailsService;
 import ru.virgil.example.util.security.policeman.WithMockFirebasePoliceman;
 import ru.virgil.example.util.security.user.WithMockFirebaseUser;
-import ru.virgil.testutils.AssertUtils;
-import ru.virgil.testutils.fluent_request.RequestUtil;
+import ru.virgil.test_utils.AssertUtils;
+import ru.virgil.test_utils.fluent_request.RequestUtil;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +38,6 @@ public class BoxApiTest {
     private final UserDetailsService userDetailsService;
     private final AssertUtils assertUtils;
     private final RequestUtil requestUtil;
-    private final MockMvc mockMvc;
 
     @Test
     void getAll() throws Exception {
