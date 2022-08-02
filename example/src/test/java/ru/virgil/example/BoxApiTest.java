@@ -7,7 +7,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.virgil.example.box.BoxController;
 import ru.virgil.example.box.BoxDto;
@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockFirebaseUser
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ComponentScan("ru.virgil.test_utils")
 public class BoxApiTest {
 
     public static final int BOX_PAGE = 0;

@@ -16,7 +16,6 @@ import ru.virgil.test_utils.TestUtils;
 
 import java.util.Optional;
 
-@AutoConfigureMockMvc
 @RequiredArgsConstructor
 @Component
 public class Requester {
