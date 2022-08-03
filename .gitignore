@@ -3,8 +3,8 @@ firebase-admin-credentials.json
 firebase-web-credentials.json
 firebase_auth_page.html
 docker-compose.yml
-**/images
-!**/static/images
+**/image
+!**/static/image
 
 HELP.md
 .gradle
