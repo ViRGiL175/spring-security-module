@@ -8,13 +8,13 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @WithSecurityContext(
-        factory = TestSecurityContextFactoryPoliceman.class,
+        factory = MockPoliceSecurityContextFactory.class,
         setupBefore = TestExecutionEvent.TEST_METHOD
 )
 public @interface WithMockFirebasePoliceman {
 
-    String firebaseUserId() default "firebase-user-id";
+    String firebaseUserId() default "";
 
-    String firebaseAuthToken() default "firebase-auth-token";
+    String firebaseAuthToken() default "";
 
 }
