@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
 import javax.annotation.PostConstruct;
@@ -74,12 +73,12 @@ public abstract class ImageService<Owner extends IBaseEntity, PrivateImage exten
 
     protected void compareDirectories(File source, File destination) throws IOException {
         List<String> listOfFilesInA = List.of(Optional.ofNullable(source.list())
-                .orElseThrow(MockImageException::new));
+                .orElseThrow(ImageException::new));
         List<String> listOfFilesInB = List.of(Optional.ofNullable(destination.list())
-                .orElseThrow(MockImageException::new));
+                .orElseThrow(ImageException::new));
         if (!new HashSet<>(listOfFilesInB).containsAll(listOfFilesInA)) {
             IOException ioException = new IOException("No files in working directory");
-            throw new MockImageException(ioException);
+            throw new ImageException(ioException);
         }
     }
 
@@ -93,13 +92,13 @@ public abstract class ImageService<Owner extends IBaseEntity, PrivateImage exten
             FileUtils.copyDirectory(source, destination);
             compareDirectories(source, destination);
         } catch (IOException e) {
-            throw new MockImageException(e);
+            throw new ImageException(e);
         }
     }
 
-    public void cleanFolders() {
-        FileSystemUtils.deleteRecursively(BASE_PRIVATE_IMAGE_PATH.toFile());
-        FileSystemUtils.deleteRecursively(BASE_PROTECTED_IMAGE_PATH.toFile());
-        FileSystemUtils.deleteRecursively(BASE_PUBLIC_IMAGE_PATH.toFile());
+    public void cleanFolders() throws IOException {
+        FileSystemUtils.deleteRecursively(BASE_PRIVATE_IMAGE_PATH);
+        FileSystemUtils.deleteRecursively(BASE_PROTECTED_IMAGE_PATH);
+        FileSystemUtils.deleteRecursively(BASE_PUBLIC_IMAGE_PATH);
     }
 }

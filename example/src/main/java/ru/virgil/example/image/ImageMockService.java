@@ -6,6 +6,7 @@ import ru.virgil.utils.FakerUtils;
 import ru.virgil.utils.image.ImageService;
 
 import javax.annotation.PreDestroy;
+import java.io.IOException;
 
 @Service
 public class ImageMockService extends ru.virgil.utils.image.ImageMockService<UserDetails, PrivateImageFile> {
@@ -16,7 +17,7 @@ public class ImageMockService extends ru.virgil.utils.image.ImageMockService<Use
 
     // todo: удалит даже нужные картинки?
     @PreDestroy
-    public void preDestroy() {
+    public void preDestroy() throws IOException {
         imageService.cleanFolders();
     }
 }

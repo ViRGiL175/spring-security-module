@@ -19,7 +19,7 @@ public abstract class ImageMockService<Owner extends IBaseEntity, Image extends 
         try {
             return imageService.savePrivate(mockAsMultipart().getBytes(), IMAGE_NAME, owner);
         } catch (IOException e) {
-            throw new MockImageException(e);
+            throw new ImageException(e);
         }
     }
 
@@ -28,7 +28,7 @@ public abstract class ImageMockService<Owner extends IBaseEntity, Image extends 
             BufferedInputStream in = new BufferedInputStream(new URL(fakerUtils.avatar().image()).openStream());
             return new MockMultipartFile(IMAGE_NAME, in);
         } catch (IOException e) {
-            throw new MockImageException(e);
+            throw new ImageException(e);
         }
     }
 }
