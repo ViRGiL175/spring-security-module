@@ -12,8 +12,8 @@ import java.net.URL;
 public abstract class ImageMockService<Owner extends IBaseEntity, Image extends IPrivateImage<Owner>> {
 
     public static final String IMAGE_NAME = "image";
-    private final ImageService<Owner, Image> imageService;
-    private final FakerUtils fakerUtils;
+    protected final ImageService<Owner, Image> imageService;
+    protected final FakerUtils fakerUtils;
 
     public Image mockImage(Owner owner) {
         try {

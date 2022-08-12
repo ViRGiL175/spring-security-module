@@ -94,9 +94,12 @@ public class FileImageApiTest {
                 .expect(status().isNotFound());
     }
 
+    /**
+     * Сделал удаление после разрушения компонента {@link ImageMockService}, может удалить нужные пользвоателю картинки,
+     * костыль.
+     */
     @AfterAll
     public void cleanUp() {
         // TODO при запуске _всех_ тестов не срабатывает, при запуска _одного_ – срабатывает
-        imageService.cleanFolders();
     }
 }
