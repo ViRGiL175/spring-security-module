@@ -23,3 +23,6 @@ security:
   anonymous-paths:
     - "/actuator/**"
     - "/image/public/**"
+###
+images:
+  clean-on-destroy: true

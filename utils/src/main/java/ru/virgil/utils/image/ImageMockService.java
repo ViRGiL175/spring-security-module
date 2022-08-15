@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.mock.web.MockMultipartFile;
 import ru.virgil.utils.FakerUtils;
 
+import javax.annotation.PreDestroy;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +15,7 @@ public abstract class ImageMockService<Owner extends IBaseEntity, Image extends 
     public static final String IMAGE_NAME = "image";
     protected final ImageService<Owner, Image> imageService;
     protected final FakerUtils fakerUtils;
+    protected final ImageProperties imageProperties;
 
     public Image mockImage(Owner owner) {
         try {
@@ -29,6 +31,13 @@ public abstract class ImageMockService<Owner extends IBaseEntity, Image extends 
             return new MockMultipartFile(IMAGE_NAME, in);
         } catch (IOException e) {
             throw new ImageException(e);
+        }
+    }
+
+    @PreDestroy
+    public void preDestroy() throws IOException {
+        if (imageProperties.cleanOnDestroy()) {
+            imageService.cleanFolders();
         }
     }
 }
