@@ -48,7 +48,6 @@ dependencies {
     // Third party dependencies
     api("com.google.truth:truth:1.1.3")
     api("com.google.firebase:firebase-admin:9.0.0")
-    api("com.hazelcast:hazelcast:5.1.3")
 
     // Spring Controlled dependencies
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -60,6 +59,7 @@ dependencies {
     implementation("org.springframework.session:spring-session-hazelcast")
     implementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springframework.security:spring-security-test")
+    implementation("com.hazelcast:hazelcast")
     runtimeOnly("org.postgresql:postgresql")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
