@@ -5,6 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import javax.annotation.Nullable;
 
 @ConfigurationProperties(prefix = "security")
-public record SecurityProperties(@Nullable String... anonymousPaths) {
+public record SecurityProperties(
+        @Nullable String[] anonymousPaths,
+        boolean useXAuthToken
+) {
 
 }

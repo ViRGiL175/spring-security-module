@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "ru.virgil"
-version = "0.4.0-SNAPSHOT"
+version = "0.5.0-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -48,6 +48,7 @@ dependencies {
     // Third party dependencies
     api("com.google.truth:truth:1.1.3")
     api("com.google.firebase:firebase-admin:9.0.0")
+    api("com.hazelcast:hazelcast:5.1.3")
 
     // Spring Controlled dependencies
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -56,6 +57,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.session:spring-session-core")
+    implementation("org.springframework.session:spring-session-hazelcast")
     implementation("org.springframework.boot:spring-boot-starter-test")
     implementation("org.springframework.security:spring-security-test")
     runtimeOnly("org.postgresql:postgresql")

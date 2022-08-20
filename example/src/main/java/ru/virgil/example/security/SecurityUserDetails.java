@@ -10,6 +10,7 @@ import ru.virgil.security.entity.SecurityUser;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Data
-public class SecurityUserDetails extends IdentifiedEntity implements SecurityUser {
+public class SecurityUserDetails extends IdentifiedEntity implements SecurityUser, Serializable {
 
     @ElementCollection
     private Set<UserAuthority> authorities = new HashSet<>();
