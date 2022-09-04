@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <!-- todo: брать название проекта из системы -->
+    <title>Firebase Authorization</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+
+    <!-- Новые версии библиотек в compat-режиме -->
+    <script src="https://www.gstatic.com/firebasejs/9.9.4/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.4/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.4/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.9.4/firebase-analytics-compat.js"></script>
+
+    <!-- Новая версия UI-авторизации -->
+    <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css"/>
+</head>
+<body>
+
+Web Firebase Authorization
+<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+<!-- todo: вынести скрипты в отдельные файлы -->
+
+<script th:inline="javascript">
+
+    // import firebase from "firebase/app"
+    // Your web app's Firebase configuration-->
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = JSON.parse([[${firebase_credentials_json}]].toString())
+    const serverUri = [[${auth_record_callback_path}]]
+    const authRecordCallbackHeader = [[${auth_record_callback_header}]]
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    const ui = new firebaseui.auth.AuthUI(firebase.auth());
+    const uiConfig = {
+        callbacks: {
+            signInSuccessWithAuthResult: onSignInSuccessWithAuthResult,
+        },
+        // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+        // signInFlow: 'popup',
+        // signInSuccessUrl: '<url-to-redirect-to-on-success>',
+        // signInSuccessUrl: serverUri,
+        signInOptions: [
+            // Leave the lines as is for the providers you want to offer your users.
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        ],
+        // Terms of service url.
+        tosUrl: '<your-tos-url>',
+        // Privacy policy url.
+        privacyPolicyUrl: '<your-privacy-policy-url>'
+    };
+    ui.start('#firebase_ui-auth-container', uiConfig)
+
+    function onFirebaseError(error) {
+        console.error(error)
+        document.getElementById("firebase-error").style.visibility = "visible";
+    }
+
+    function onSignInSuccessWithAuthResult(authResult, redirectUrl) {
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+            .then(onIdTokenGot)
+            .catch(onFirebaseError)
+    }
+
+    function onPutAuthData(response) {
+        if (response.ok) {
+            document.getElementById("server-success").style.visibility = "visible";
+        }
+    }
+
+    function onServerError(error) {
+        console.error(error)
+        document.getElementById("server-error").style.visibility = "visible";
+    }
+
+    function onIdTokenGot(idToken) {
+        document.getElementById("firebase-success").style.visibility = "visible";
+        const authData = {
+            credentials: idToken,
+            principal: firebase.auth().currentUser.uid
+        };
+        fetch(serverUri.toString(), {
+            method: "PUT",
+            credentials: "same-origin",
+            cache: "no-cache",
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": authRecordCallbackHeader,
+            },
+            body: JSON.stringify(authData),
+        })
+            .then(onPutAuthData)
+            .catch(onServerError)
+    }
+
+</script>
+
+<div id="firebase_ui-auth-container"></div>
+
+<div id="firebase-error" style="visibility: hidden">Firebase Error!</div>
+<div id="server-error" style="visibility: hidden">Server Error!</div>
+<div id="firebase-success" style="visibility: hidden">Firebase Success!</div>
+<div id="server-success" style="visibility: hidden">Server Success!</div>
+
+</body>
+</html>
