@@ -1,5 +1,6 @@
 package ru.virgil.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,10 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final FirebaseAuthorizationProvider firebaseAuthorizationProvider;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final SecurityProperties securityProperties;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        String[] propertyIgnoredPaths = Optional.ofNullable(securityProperties.anonymousPaths()).orElse(new String[0]);
+        String[] propertyIgnoredPaths = securityProperties.getAnonymousPaths();
         httpSecurity
                 // todo: стандартный редирект на страницу успешной безопасности
                 // todo: разобраться, как включить
@@ -40,7 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(propertyIgnoredPaths).permitAll()
                 .mvcMatchers("/**").authenticated()
                 .and()
-                .addFilterBefore(new FirebaseAuthenticationFilter(authenticationManager()),
+                .addFilterBefore(
+                        new FirebaseAuthenticationFilter(authenticationManager(), securityProperties, objectMapper),
                         UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(firebaseAuthorizationProvider)
         // todo: разобраться, как лучше реагировать на ошибки и не подставлять безопасность

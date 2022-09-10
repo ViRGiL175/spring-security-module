@@ -34,7 +34,7 @@ public class SessionsConfig {
     @Nullable
     @Bean
     public HttpSessionIdResolver httpSessionIdResolver() {
-        return securityProperties.useXAuthToken()
+        return securityProperties.isUseXAuthToken()
                 ? HeaderHttpSessionIdResolver.xAuthToken()
                 : null;
     }

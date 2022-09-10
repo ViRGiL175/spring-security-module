@@ -2,6 +2,7 @@ package ru.virgil.security.firebase;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -9,7 +10,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import ru.virgil.security.SecurityConfig;
+import ru.virgil.security.SecurityProperties;
 import ru.virgil.security.entity.AuthMethods;
 import ru.virgil.security.header.AuthorizationHeader;
 
@@ -22,7 +25,7 @@ import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
 
-
+@CommonsLog
 public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public static final String FIREBASE_UID_CREDENTIAL = "firebase_uid";
@@ -30,11 +33,15 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
     public static final AuthorizationHeader AUTHORIZATION_HEADER_EXAMPLE = new AuthorizationHeader(AuthMethods.FIREBASE,
             Map.of(FIREBASE_UID_CREDENTIAL, "value", FIREBASE_AUTH_TOKEN_CREDENTIAL, "value"));
     public static final List<GrantedAuthority> DEFAULT_AUTHORITIES = List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    // todo: перейти на сериализацию CSV или похожую
-    private final ObjectMapper serializer = new ObjectMapper();
+    private final ObjectMapper serializer;
 
-    public FirebaseAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public FirebaseAuthenticationFilter(AuthenticationManager authenticationManager,
+            SecurityProperties securityProperties, ObjectMapper objectMapper) {
         super(SecurityConfig.AUTH_API_PATHS.get(AuthMethods.FIREBASE), authenticationManager);
+        serializer = objectMapper;
+        if (securityProperties.isDisablePostAuthRedirect()) {
+            setAuthenticationSuccessHandler(new NoRedirectsHandler());
+        }
     }
 
     @Override
@@ -58,5 +65,14 @@ public class FirebaseAuthenticationFilter extends AbstractAuthenticationProcessi
                 authorizationHeader.credentials().get(FIREBASE_UID_CREDENTIAL),
                 authorizationHeader.credentials().get(FIREBASE_AUTH_TOKEN_CREDENTIAL));
         return this.getAuthenticationManager().authenticate(firebaseAuthenticationToken);
+    }
+
+    static class NoRedirectsHandler implements AuthenticationSuccessHandler {
+
+        @Override
+        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                Authentication authentication) {
+            log.info("Auth Redirects is disabled in %s".formatted(SecurityProperties.class.getSimpleName()));
+        }
     }
 }
