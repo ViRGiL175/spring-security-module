@@ -1,23 +1,22 @@
 package ru.virgil.security;
 
-import lombok.Value;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Value
+@Data
 @ConfigurationProperties(prefix = "security")
 public class SecurityProperties {
 
     /**
      * По этим путям можно будет заходить анонимно
      */
-    String[] anonymousPaths = new String[0];
+    private String[] anonymousPaths = new String[0];
     /**
      * Использовать для сессий заголовок X-Auth-Token вместо Cookies
      */
-    boolean useXAuthToken = false;
+    private boolean useXAuthToken = false;
     /**
      * Отключить редиректы после успешной авторизации
      */
-    boolean disablePostAuthRedirect = false;
-
+    private boolean disablePostAuthRedirect = false;
 }
