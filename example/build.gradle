@@ -1,6 +1,6 @@
 plugins {
     id "org.springframework.boot" version "2.7.1"
-    id "io.spring.dependency-management" version "1.0.13.RELEASE"
+    id "io.spring.dependency-management" version "1.1.0"
     id "java"
 }
 
@@ -30,7 +30,7 @@ dependencies {
     testImplementation project(":utils")
     implementation "com.google.truth:truth:1.1.3"
     implementation "com.google.firebase:firebase-admin:9.0.0"
-    implementation "net.datafaker:datafaker:1.4.0"
+    implementation "net.datafaker:datafaker:1.7.0"
     implementation "org.mapstruct:mapstruct:1.5.2.Final"
     annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
     annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
