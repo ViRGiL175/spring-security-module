@@ -4,7 +4,7 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
     id("org.springframework.boot") version "2.6.10" apply false
-    id("io.spring.dependency-management") version "1.0.13.RELEASE"
+    id("io.spring.dependency-management") version "1.1.0"
     id("java-library")
 }
 
