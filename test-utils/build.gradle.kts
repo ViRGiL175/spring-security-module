@@ -3,13 +3,13 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id("org.springframework.boot") version "2.6.10" apply false
+    id("org.springframework.boot") version "3.0.2" apply false
     id("io.spring.dependency-management") version "1.1.0"
     id("java-library")
 }
 
 group = "ru.virgil"
-version = "0.0.2-SNAPSHOT"
+version = "0.0.1-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
