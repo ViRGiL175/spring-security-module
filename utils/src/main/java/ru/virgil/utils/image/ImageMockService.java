@@ -1,6 +1,7 @@
 package ru.virgil.utils.image;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.mock.web.MockMultipartFile;
 import ru.virgil.utils.FakerUtils;
 
@@ -9,6 +10,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URL;
 
+@EnableConfigurationProperties(ImageProperties.class)
 @RequiredArgsConstructor
 public abstract class ImageMockService<Owner extends IBaseEntity, Image extends IPrivateImage<Owner>> {
 
