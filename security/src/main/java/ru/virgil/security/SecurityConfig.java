@@ -11,7 +11,6 @@ import ru.virgil.security.firebase.FirebaseAuthenticationFilter;
 import ru.virgil.security.firebase.FirebaseAuthorizationProvider;
 
 import java.util.Map;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor

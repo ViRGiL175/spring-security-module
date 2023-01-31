@@ -4,6 +4,7 @@ import com.hazelcast.config.*;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.MapSession;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
  * </a>
  */
 @Configuration
+@EnableConfigurationProperties(SecurityProperties.class)
 @EnableHazelcastHttpSession
 @RequiredArgsConstructor
 public class SessionsConfig {

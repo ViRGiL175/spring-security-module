@@ -3,13 +3,14 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
+    // TODO: Обновить до 3.2, будет куча ошибок
     id("org.springframework.boot") version "2.6.10" apply false
     id("io.spring.dependency-management") version "1.1.0"
     id("java-library")
 }
 
 group = "ru.virgil"
-version = "0.5.1-SNAPSHOT"
+version = "0.5.2-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17

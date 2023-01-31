@@ -59,7 +59,7 @@ public abstract class ImageService<Owner extends IBaseEntity, PrivateImage exten
         return privateImage;
     }
 
-   protected abstract PrivateImage createEmptyPrivateImage();
+    protected abstract PrivateImage createEmptyPrivateImage();
 
     @PostConstruct
     public void preparePublicWorkDirectory() {
