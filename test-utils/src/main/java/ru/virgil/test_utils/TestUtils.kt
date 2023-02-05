@@ -1,6 +1,5 @@
 package ru.virgil.test_utils
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.json.JSONArray
 import org.json.JSONException
@@ -8,12 +7,15 @@ import org.json.JSONObject
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.test.web.servlet.MvcResult
-import java.io.IOException
-import java.io.UnsupportedEncodingException
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.math.min
 
+private const val ERROR_VALUE = "ERROR"
+private const val NONE_VALUE = "NONE"
+private const val JSON_OUTPUT_LENGTH = 2048
+
+// todo: оставить тут только работу с парсингом
 @Component
 class TestUtils(protected val objectMapper: ObjectMapper) {
 
@@ -24,7 +26,6 @@ class TestUtils(protected val objectMapper: ObjectMapper) {
         return objectMapper.readValue(mvcResult.response.contentAsString, dtoClass)
     }
 
-    @Throws(IOException::class)
     fun <D, C : Collection<*>, R> extractDtoFromResponse(
         mvcResult: MvcResult, collectionClass: Class<C>,
         dtoClass: Class<D>,
@@ -36,44 +37,36 @@ class TestUtils(protected val objectMapper: ObjectMapper) {
     }
 
     fun printResponse(mvcResult: MvcResult) {
-        val method = mvcResult.request.method
-        val requestURI = mvcResult.request.requestURI
+        val method = mvcResult.request.method ?: ERROR_VALUE
+        val requestURI = mvcResult.request.requestURI ?: ERROR_VALUE
         val requestParams = extractPrettyParams(mvcResult)
         val status = mvcResult.response.status
+        val requestContent = extractPrettyRequest(mvcResult)
         val responseContent = extractPrettyResponse(mvcResult)
-        val requestContent = Optional.ofNullable(mvcResult.request.contentAsString)
-            .map { extractPrettyRequest(it) }
-            .orElse("NONE")
-        logger.info(
-            TEST_RESULTS_TEMPLATE.format(
-                method,
-                requestURI,
-                requestParams,
-                status,
-                requestContent,
-                responseContent
-            )
-        )
+        logger.info(buildTestResults(method, requestURI, requestParams, status, requestContent, responseContent))
     }
+
+    private fun extractPrettyRequest(mvcResult: MvcResult): String =
+        Optional.ofNullable(mvcResult.request.contentAsString)
+            .map { extractPrettyRequest(it) }
+            .orElse(NONE_VALUE)
 
     protected fun extractPrettyRequest(requestContent: String): String {
-        var requestContent = requestContent
-        requestContent = objectMapper.readTree(requestContent).toPrettyString()
-        requestContent = shortenJson(requestContent)
-        return requestContent
+        var prettyRequestContent = objectMapper.readTree(requestContent).toPrettyString()
+        prettyRequestContent = shortenJson(prettyRequestContent)
+        return prettyRequestContent
     }
 
-    @Throws(UnsupportedEncodingException::class, JsonProcessingException::class)
     protected fun extractPrettyResponse(mvcResult: MvcResult): String {
         var responseContent = mvcResult.response.contentAsString
-        if (!isJson(responseContent)) {
-            return "BODY: content-type -> ${mvcResult.response.contentType}"
+        return when {
+            !isJson(responseContent) -> "BODY: content-type -> ${mvcResult.response.contentType}"
+            else -> {
+                responseContent = objectMapper.readTree(responseContent).toPrettyString()
+                responseContent = shortenJson(responseContent)
+                responseContent.ifEmpty { NONE_VALUE }
+            }
         }
-        responseContent = objectMapper.readTree(responseContent).toPrettyString()
-        responseContent = shortenJson(responseContent)
-        return if (responseContent.isEmpty()) {
-            "NONE"
-        } else responseContent
     }
 
     fun isJson(jsonInString: String): Boolean {
@@ -90,19 +83,13 @@ class TestUtils(protected val objectMapper: ObjectMapper) {
     }
 
     protected fun shortenJson(requestContent: String): String {
-        var substring = requestContent.substring(0, min(JSON_OUTPUT_LENGTH, requestContent.length))
-        if (substring.length == JSON_OUTPUT_LENGTH) {
-            substring += """
-                    ...
-                                        
-                    /// JSON SHORTENED TO $JSON_OUTPUT_LENGTH SYMBOLS ///
-                                        
-                    
-                                        
-                    """.trimIndent()
+        var shortedRequestContent = requestContent.substring(0, min(JSON_OUTPUT_LENGTH, requestContent.length))
+        if (shortedRequestContent.length == JSON_OUTPUT_LENGTH) {
+            shortedRequestContent += buildShortenMessage()
         }
-        return substring
+        return shortedRequestContent
     }
+
 
     protected fun extractPrettyParams(mvcResult: MvcResult): String {
         val parameterMap = mvcResult.request.parameterMap
@@ -115,25 +102,29 @@ class TestUtils(protected val objectMapper: ObjectMapper) {
         return stringParams
     }
 
-    companion object {
-
-        // todo: оставить тут только работу с парсингом
-        const val JSON_OUTPUT_LENGTH = 2048
-        val TEST_RESULTS_TEMPLATE =
-            """
-                     
-                        
-            /// TEST RESULTS ///
-                        
-            REQUEST: 
-            %s %s%s -> %d
-                        
-            REQUEST JSON: 
-            %s
-                        
-            RESPONSE JSON: 
-            %s
-            
-            """.trimIndent()
-    }
 }
+
+private fun buildShortenMessage() = """
+...
+                    
+/// JSON SHORTENED TO $JSON_OUTPUT_LENGTH SYMBOLS ///
+                                      
+"""
+
+private fun buildTestResults(
+    method: String, requestURI: String, requestParams: String, status: Int, requestContent: String,
+    responseContent: String,
+) = """
+                                                    
+/// TEST RESULTS ///
+            
+REQUEST: 
+$method $requestURI$requestParams -> $status
+            
+REQUEST JSON: 
+$requestContent
+            
+RESPONSE JSON: 
+$responseContent
+
+"""
