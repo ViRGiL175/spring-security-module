@@ -15,26 +15,10 @@ private const val ERROR_VALUE = "ERROR"
 private const val NONE_VALUE = "NONE"
 private const val JSON_OUTPUT_LENGTH = 2048
 
-// todo: оставить тут только работу с парсингом
 @Component
 class TestUtils(protected val objectMapper: ObjectMapper) {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
-
-    // todo: изввлечение коллекций?
-    fun <D> extractDtoFromResponse(mvcResult: MvcResult, dtoClass: Class<D>): D {
-        return objectMapper.readValue(mvcResult.response.contentAsString, dtoClass)
-    }
-
-    fun <D, C : Collection<*>, R> extractDtoFromResponse(
-        mvcResult: MvcResult, collectionClass: Class<C>,
-        dtoClass: Class<D>,
-    ): R {
-        val typeFactory = objectMapper.typeFactory
-        val collectionType = typeFactory.constructCollectionType(collectionClass, dtoClass)
-        val contentAsString = mvcResult.response.contentAsString
-        return objectMapper.readValue(contentAsString, collectionType)
-    }
 
     fun printResponse(mvcResult: MvcResult) {
         val method = mvcResult.request.method ?: ERROR_VALUE
@@ -48,10 +32,10 @@ class TestUtils(protected val objectMapper: ObjectMapper) {
 
     private fun extractPrettyRequest(mvcResult: MvcResult): String =
         Optional.ofNullable(mvcResult.request.contentAsString)
-            .map { extractPrettyRequest(it) }
+            .map { makeJsonPretty(it) }
             .orElse(NONE_VALUE)
 
-    protected fun extractPrettyRequest(requestContent: String): String {
+    protected fun makeJsonPretty(requestContent: String): String {
         var prettyRequestContent = objectMapper.readTree(requestContent).toPrettyString()
         prettyRequestContent = shortenJson(prettyRequestContent)
         return prettyRequestContent
@@ -60,26 +44,13 @@ class TestUtils(protected val objectMapper: ObjectMapper) {
     protected fun extractPrettyResponse(mvcResult: MvcResult): String {
         var responseContent = mvcResult.response.contentAsString
         return when {
-            !isJson(responseContent) -> "BODY: content-type -> ${mvcResult.response.contentType}"
+            !responseContent.isJson() -> "BODY: content-type -> ${mvcResult.response.contentType}"
             else -> {
                 responseContent = objectMapper.readTree(responseContent).toPrettyString()
                 responseContent = shortenJson(responseContent)
                 responseContent.ifEmpty { NONE_VALUE }
             }
         }
-    }
-
-    fun isJson(jsonInString: String): Boolean {
-        try {
-            JSONObject(jsonInString)
-        } catch (ex: JSONException) {
-            try {
-                JSONArray(jsonInString)
-            } catch (ex1: JSONException) {
-                return false
-            }
-        }
-        return true
     }
 
     protected fun shortenJson(requestContent: String): String {
@@ -89,7 +60,6 @@ class TestUtils(protected val objectMapper: ObjectMapper) {
         }
         return shortedRequestContent
     }
-
 
     protected fun extractPrettyParams(mvcResult: MvcResult): String {
         val parameterMap = mvcResult.request.parameterMap
@@ -128,3 +98,16 @@ RESPONSE JSON:
 $responseContent
 
 """
+
+private fun String.isJson(): Boolean {
+    try {
+        JSONObject(this)
+    } catch (ex: JSONException) {
+        try {
+            JSONArray(this)
+        } catch (ex1: JSONException) {
+            return false
+        }
+    }
+    return true
+}
