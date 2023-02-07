@@ -5,12 +5,12 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
     // TODO: Обновить до 3.2, будет куча ошибок
-    id("org.springframework.boot") version "2.6.10" apply false
+    id("org.springframework.boot") version "2.6.14" apply false
     id("io.spring.dependency-management") version "1.1.0"
     id("java-library")
-    kotlin("jvm") version "1.8.10"
-    kotlin("plugin.spring") version "1.8.10"
-    kotlin("plugin.jpa") version "1.8.10"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.spring") version "1.7.10"
+    kotlin("plugin.jpa") version "1.7.10"
 }
 
 group = "ru.virgil"
@@ -72,12 +72,10 @@ dependencies {
 }
 
 val compileKotlin: KotlinCompile by tasks
-
 compileKotlin.kotlinOptions {
     jvmTarget = "17"
 }
 val compileTestKotlin: KotlinCompile by tasks
-
 compileTestKotlin.kotlinOptions {
     jvmTarget = "17"
 }

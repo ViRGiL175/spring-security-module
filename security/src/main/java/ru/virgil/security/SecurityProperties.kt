@@ -8,13 +8,13 @@ data class SecurityProperties(
     /**
      * По этим путям можно будет заходить анонимно
      */
-    val anonymousPaths: List<String> = listOf(),
+    var anonymousPaths: List<String> = ArrayList(),
     /**
      * Использовать для сессий заголовок X-Auth-Token вместо Cookies
      */
-    val useXAuthToken: Boolean = false,
+    var useXAuthToken: Boolean = false,
     /**
      * Отключить редиректы после успешной авторизации
      */
-    val disablePostAuthRedirect: Boolean = false,
+    var disablePostAuthRedirect: Boolean = false,
 )

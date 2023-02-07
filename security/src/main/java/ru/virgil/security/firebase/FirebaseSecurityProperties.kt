@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "security.firebase")
 data class FirebaseSecurityProperties(
-    val adminCredentialsFilePath: String,
-    val webCredentialsFilePath: String,
-    val authPageTemplateName: String,
+    var adminCredentialsFilePath: String?,
+    var webCredentialsFilePath: String?,
+    var authPageTemplateName: String?,
 )

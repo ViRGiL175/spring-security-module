@@ -16,8 +16,9 @@ class InMemorySecurityUserService(
         .orElseGet { registerNewUser(authentication) }
 
     private fun registerNewUser(authentication: Authentication): SecurityUser {
-        val securityUserDetails = BaseSecurityUser(authentication.authorities)
-        securityUserDetails.firebaseUserId = authentication.toString()
+        val securityUserDetails = BaseSecurityUser(
+            authentication.authorities, firebaseUserId = authentication.toString()
+        )
         baseSecurityUsers.add(securityUserDetails)
         return securityUserDetails
     }

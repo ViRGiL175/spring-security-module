@@ -26,7 +26,7 @@ class SessionsConfig(private val securityProperties: SecurityProperties) {
 
     @Bean
     fun httpSessionIdResolver(): HttpSessionIdResolver? {
-        return if (securityProperties.isUseXAuthToken) HeaderHttpSessionIdResolver.xAuthToken() else null
+        return if (securityProperties.useXAuthToken) HeaderHttpSessionIdResolver.xAuthToken() else null
     }
 
     @Bean

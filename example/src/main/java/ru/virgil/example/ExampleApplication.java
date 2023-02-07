@@ -7,7 +7,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 
 @ConfigurationPropertiesScan
 @EnableGlobalMethodSecurity(jsr250Enabled = true, prePostEnabled = true)
-@SpringBootApplication(scanBasePackages = {"ru.virgil.example", "ru.virgil.security", "ru.virgil.utils"})
+@SpringBootApplication(
+        scanBasePackages = {"ru.virgil.example", "ru.virgil.security", "ru.virgil.utils", "ru.virgil.test_utils"}
+)
 public class ExampleApplication {
 
     public static void main(String[] args) {
