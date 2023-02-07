@@ -28,7 +28,7 @@ public class SecurityUserDetails extends IdentifiedEntity implements SecurityUse
     private String firebaseUserId;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<GrantedAuthority> getAuthorities() {
         return authorities.stream()
                 .map(userAuthority -> new SimpleGrantedAuthority(userAuthority.name()))
                 .collect(Collectors.toSet());
