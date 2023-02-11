@@ -3,15 +3,19 @@ package ru.virgil.utils.image
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.mock.web.MockMultipartFile
 import ru.virgil.utils.Faker
+import ru.virgil.utils.base.entity.Identified
 import java.io.BufferedInputStream
 import java.io.IOException
 import java.net.URL
 import javax.annotation.PreDestroy
 
 @EnableConfigurationProperties(ImageProperties::class)
-abstract class ImageMockService<Owner : IBaseEntity, Image : IPrivateImage<Owner>>(
+abstract class ImageMockService<Owner : Identified, Image : PrivateImage<Owner>>(
+    @Suppress("MemberVisibilityCanBePrivate")
     protected val imageService: ImageService<Owner, Image>,
+    @Suppress("MemberVisibilityCanBePrivate")
     protected val fakerUtils: Faker,
+    @Suppress("MemberVisibilityCanBePrivate")
     protected val imageProperties: ImageProperties,
 ) {
 

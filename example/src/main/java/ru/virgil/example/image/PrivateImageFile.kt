@@ -2,7 +2,7 @@ package ru.virgil.example.image
 
 import ru.virgil.example.system.entity.OwnedEntity
 import ru.virgil.example.user.UserDetails
-import ru.virgil.utils.image.IPrivateImage
+import ru.virgil.utils.image.PrivateImage
 import java.nio.file.Path
 import javax.persistence.Entity
 import javax.persistence.Transient
@@ -11,7 +11,7 @@ import javax.persistence.Transient
 class PrivateImageFile(
     owner: UserDetails,
     fileLocation: Path,
-) : OwnedEntity(owner), IPrivateImage<UserDetails> {
+) : OwnedEntity(owner), PrivateImage<UserDetails> {
 
     @get:Transient
     override var fileLocation: Path

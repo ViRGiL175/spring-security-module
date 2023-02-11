@@ -5,6 +5,7 @@ import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 import org.springframework.util.FileSystemUtils
+import ru.virgil.utils.base.entity.Identified
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
@@ -13,15 +14,18 @@ import java.nio.file.Paths
 import java.util.*
 import javax.annotation.PostConstruct
 
-abstract class ImageService<Owner : IBaseEntity, PrivateImage : IPrivateImage<Owner>>(
+abstract class ImageService<Owner : Identified, PrivateImage : ru.virgil.utils.image.PrivateImage<Owner>>(
+    @Suppress("MemberVisibilityCanBePrivate")
     protected val resourceLoader: ResourceLoader,
-    protected val privateImageRepository: IPrivateImageRepository<Owner, PrivateImage>,
+    @Suppress("MemberVisibilityCanBePrivate")
+    protected val privateImageRepository: PrivateImageRepository<Owner, PrivateImage>,
+    @Suppress("MemberVisibilityCanBePrivate")
     protected val fileTypeService: FileTypeService,
 ) {
 
     fun getPrivate(owner: Owner, imageUuid: UUID): Resource {
         val privateImage = privateImageRepository.findByOwnerAndUuid(owner, imageUuid).orElseThrow()
-        return FileSystemResource(privateImage.fileLocation!!)
+        return FileSystemResource(privateImage.fileLocation)
     }
 
     fun getProtected(imageName: String): Resource = FileSystemResource(BASE_PROTECTED_IMAGE_PATH.resolve(imageName))

@@ -33,7 +33,6 @@ class BoxApiTest @Autowired constructor(
     private val boxProvider: ObjectProvider<Box>,
 ) {
 
-    @Throws(Exception::class)
     @Test
     fun getAll() {
         val boxDtoList = requestUtil.get(
@@ -47,7 +46,6 @@ class BoxApiTest @Autowired constructor(
     }
 
     @Test
-    @Throws(Exception::class)
     fun get() {
         var box = boxProvider.getObject()
         val boxDto = requestUtil.get("/box/%s".format(box.uuid))
@@ -58,7 +56,6 @@ class BoxApiTest @Autowired constructor(
     }
 
     @Test
-    @Throws(Exception::class)
     fun createWithoutType() {
         val testDto = BoxDto(null, null, null, null, faker.appliance().brand(), 50000, 658f)
         requestUtil.post("/box")
@@ -68,7 +65,6 @@ class BoxApiTest @Autowired constructor(
     }
 
     @Test
-    @Throws(Exception::class)
     fun create() {
         val testDto = BoxDto(type = BoxType.USUAL, description = "CREATED", price = 50000, weight = 658f)
         val createdDto = requestUtil.post("/box")
@@ -84,7 +80,6 @@ class BoxApiTest @Autowired constructor(
     }
 
     @Test
-    @Throws(Exception::class)
     fun edit() {
         val testDto = BoxDto(type = BoxType.USUAL, description = "EDITED", price = 78434, weight = 456f)
         val box = boxProvider.getObject()
@@ -101,7 +96,6 @@ class BoxApiTest @Autowired constructor(
     }
 
     @Test
-    @Throws(Exception::class)
     fun delete() {
         val box = boxProvider.getObject()
         requestUtil.delete("/box/%s".format(box.uuid))
@@ -113,7 +107,6 @@ class BoxApiTest @Autowired constructor(
     }
 
     @Test
-    @Throws(Exception::class)
     fun createWeaponByUsualUser() {
         val testDto = BoxDto(type = BoxType.WEAPON, description = "CREATED-BY-USUAL-USER", price = 50000, weight = 658f)
         requestUtil.post("/box")
@@ -124,7 +117,6 @@ class BoxApiTest @Autowired constructor(
 
     @Test
     @WithMockFirebasePoliceman
-    @Throws(Exception::class)
     fun createWeaponByPoliceman() {
         val testDto = BoxDto(type = BoxType.WEAPON, description = "CREATED-BY-POLICEMAN", price = 50000, weight = 658f)
         val createdDto = requestUtil.post("/box")
@@ -139,7 +131,6 @@ class BoxApiTest @Autowired constructor(
         Truth.assertThat(createdDto).isEqualTo(serverDto)
     }
 
-    @Throws(Exception::class)
     @Test
     fun getAllWeaponsByUsualUser(): Unit {
         requestUtil.get(
@@ -149,7 +140,6 @@ class BoxApiTest @Autowired constructor(
             .expect(MockMvcResultMatchers.status().isForbidden)
     }
 
-    @Throws(Exception::class)
     @WithMockFirebasePoliceman
     @Test
     fun getAllWeaponsByPoliceman(): Unit {
