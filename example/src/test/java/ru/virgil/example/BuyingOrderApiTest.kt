@@ -44,20 +44,13 @@ class BuyingOrderApiTest @Autowired constructor(
             .expect(MockMvcResultMatchers.status().isOk) as List<BuyingOrderDto>
         Truth.assertThat(buyingOrderDtoList.stream().findAny().orElseThrow())
             .isInstanceOf(BuyingOrderDto::class.java)
-
-        // todo: сначала обращаемся напрямую к серверу, а потом делаем запрос, не одновременно
-        // todo: почему не проходит проверка?
-        //        BuyingOrderDto randomBuyingOrderDto = requestUtil.get("/buying_order/%s".formatted(randomOrderUuid()))
-        //                .receive(BuyingOrderDto.class)
-        //                .expect(status().isOk());
-        //        Truth.assertThat(buyingOrderDtoList).contains(randomBuyingOrderDto);
     }
 
     @Test
     @Throws(Exception::class)
     fun get() {
         val buyingOrder = buyingOrderProvider.getObject()
-        val randomBuyingOrderDto = requestUtil.get("/buying_order/%s".format(buyingOrder.uuid))
+        val randomBuyingOrderDto = requestUtil.get("/buying_order/${buyingOrder.uuid}")
             .receive(BuyingOrderDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BuyingOrderDto

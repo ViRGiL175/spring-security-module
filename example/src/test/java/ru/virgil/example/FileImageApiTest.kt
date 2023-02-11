@@ -63,7 +63,7 @@ class FileImageApiTest @Autowired constructor(
     @WithMockFirebaseUser
     @Test
     fun getProtectedImage(): Unit {
-        val byteArray = requestUtil["/image/protected/image.jpg"]
+        val byteArray = requestUtil.get("/image/protected/image.jpg")
             .receiveAsBytes()
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as ByteArray
@@ -73,7 +73,7 @@ class FileImageApiTest @Autowired constructor(
     @Throws(Exception::class)
     @Test
     fun getPublicImage(): Unit {
-        val byteArray = requestUtil["/image/public/image.jpg"]
+        val byteArray = requestUtil.get("/image/public/image.jpg")
             .receiveAsBytes()
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as ByteArray

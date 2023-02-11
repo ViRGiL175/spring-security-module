@@ -35,9 +35,7 @@ class BoxApiTest @Autowired constructor(
 
     @Test
     fun getAll() {
-        val boxDtoList = requestUtil.get(
-            "/box?%s=%s&%s=%s".format(PAGE_PARAM, BOX_PAGE, PAGE_SIZE_PARAM, BOX_PAGE_SIZE)
-        )
+        val boxDtoList = requestUtil.get("/box?$PAGE_PARAM=$BOX_PAGE&$PAGE_SIZE_PARAM=$BOX_PAGE_SIZE")
             .receive(MutableList::class.java, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as List<BoxDto?>
@@ -47,8 +45,8 @@ class BoxApiTest @Autowired constructor(
 
     @Test
     fun get() {
-        var box = boxProvider.getObject()
-        val boxDto = requestUtil.get("/box/%s".format(box.uuid))
+        val box = boxProvider.getObject()
+        val boxDto = requestUtil.get("/box/${box.uuid}")
             .receive(BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
@@ -83,7 +81,7 @@ class BoxApiTest @Autowired constructor(
     fun edit() {
         val testDto = BoxDto(type = BoxType.USUAL, description = "EDITED", price = 78434, weight = 456f)
         val box = boxProvider.getObject()
-        val changedDto = requestUtil.put("/box/%s".format(box.uuid))
+        val changedDto = requestUtil.put("/box/${box.uuid}")
             .exchange(testDto, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
@@ -98,10 +96,10 @@ class BoxApiTest @Autowired constructor(
     @Test
     fun delete() {
         val box = boxProvider.getObject()
-        requestUtil.delete("/box/%s".format(box.uuid))
+        requestUtil.delete("/box/${box.uuid}")
             .and()
             .expect(MockMvcResultMatchers.status().isOk)
-        requestUtil.get("/box/%s".format(box.uuid))
+        requestUtil.get("/box/${box.uuid}")
             .and()
             .expect(MockMvcResultMatchers.status().isNotFound)
     }
@@ -124,7 +122,7 @@ class BoxApiTest @Autowired constructor(
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
         assertUtils.partialEquals(createdDto, testDto)
-        val serverDto = requestUtil.get("/box/%s".format(createdDto.uuid))
+        val serverDto = requestUtil.get("/box/${createdDto.uuid}")
             .receive(BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
@@ -133,9 +131,7 @@ class BoxApiTest @Autowired constructor(
 
     @Test
     fun getAllWeaponsByUsualUser(): Unit {
-        requestUtil.get(
-            "/box/weapons?%s=%s&%s=%s".format(PAGE_PARAM, BOX_PAGE, PAGE_SIZE_PARAM, BOX_PAGE_SIZE)
-        )
+        requestUtil.get("/box/weapons?$PAGE_PARAM=$BOX_PAGE&$PAGE_SIZE_PARAM=$BOX_PAGE_SIZE")
             .and()
             .expect(MockMvcResultMatchers.status().isForbidden)
     }
@@ -149,9 +145,7 @@ class BoxApiTest @Autowired constructor(
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
         assertUtils.partialEquals(serverDto, testDto)
-        val weaponDtoList = requestUtil.get(
-            "/box/weapons?%s=%s&%s=%s".format(PAGE_PARAM, BOX_PAGE, PAGE_SIZE_PARAM, BOX_PAGE_SIZE)
-        )
+        val weaponDtoList = requestUtil.get("/box/weapons?$PAGE_PARAM=$BOX_PAGE&$PAGE_SIZE_PARAM=$BOX_PAGE_SIZE")
             .receive(MutableList::class.java, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as List<BoxDto?>
