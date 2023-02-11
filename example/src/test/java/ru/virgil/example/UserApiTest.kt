@@ -22,7 +22,7 @@ class UserApiTest @Autowired constructor(private val requestUtil: RequestUtil) {
     @Test
     @Throws(Exception::class)
     fun get() {
-        val userDetailsDto = requestUtil["/user_details"]
+        val userDetailsDto = requestUtil.get("/user_details")
             .receive(UserDetailsDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as UserDetailsDto

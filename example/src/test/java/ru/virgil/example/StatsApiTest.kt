@@ -22,7 +22,7 @@ class StatsApiTest @Autowired constructor(private val requestUtil: RequestUtil) 
     @Throws(Exception::class)
     @Test
     fun getAll(): Unit {
-        val statsDto = requestUtil["/stats/all"]
+        val statsDto = requestUtil.get("/stats/all")
             .receive(StatsDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as StatsDto
@@ -32,7 +32,7 @@ class StatsApiTest @Autowired constructor(private val requestUtil: RequestUtil) 
     @Throws(Exception::class)
     @Test
     fun getMy(): Unit {
-        val statsDto = requestUtil["/stats/my"]
+        val statsDto = requestUtil.get("/stats/my")
             .receive(StatsDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as StatsDto

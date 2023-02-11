@@ -5,7 +5,7 @@ import java.util.*
 
 interface IBaseEntity {
 
-    var uuid: UUID?
-    var createdAt: LocalDateTime?
-    var updatedAt: LocalDateTime?
+    var uuid: UUID
+    var createdAt: LocalDateTime
+    var updatedAt: LocalDateTime
 }

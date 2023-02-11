@@ -84,13 +84,13 @@ class FileImageApiTest @Autowired constructor(
     @WithMockFirebaseUser
     @Test
     fun getNotExisting(): Unit {
-        requestUtil["/image/public/not_existing.jpg"]
+        requestUtil.get("/image/public/not_existing.jpg")
             .and()
             .expect(MockMvcResultMatchers.status().isNotFound)
-        requestUtil["/image/protected/not_existing.jpg"]
+        requestUtil.get("/image/protected/not_existing.jpg")
             .and()
             .expect(MockMvcResultMatchers.status().isNotFound)
-        requestUtil["/image/protected/%s".formatted(UUID.randomUUID())]
+        requestUtil.get("/image/protected/%s".format(UUID.randomUUID()))
             .and()
             .expect(MockMvcResultMatchers.status().isNotFound)
     }

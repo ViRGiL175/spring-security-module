@@ -25,14 +25,6 @@ configurations {
     }
 }
 
-tasks.withType<JavaCompile> {
-    options.compilerArgs.addAll(
-        arrayOf(
-            "-Amapstruct.defaultComponentModel=spring"
-        )
-    )
-}
-
 repositories {
     mavenCentral()
 }
@@ -58,9 +50,6 @@ dependencies {
     implementation("com.google.truth:truth:1.1.3")
     implementation("com.google.firebase:firebase-admin:9.0.0")
     implementation("net.datafaker:datafaker:1.4.0")
-    implementation("org.mapstruct:mapstruct:1.5.2.Final")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.5.2.Final")
-    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
     implementation("org.apache.tika:tika-core:2.4.1")
     implementation("org.apache.tika:tika-parsers:2.4.1")
 
@@ -76,8 +65,6 @@ dependencies {
     implementation("org.springframework.session:spring-session-core")
     runtimeOnly("org.postgresql:postgresql")
     implementation("com.h2database:h2")
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
 
@@ -85,6 +72,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    // Исправляет проблемы методов Kotlin?
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:2.7.8"))
 }
 
 val compileKotlin: KotlinCompile by tasks

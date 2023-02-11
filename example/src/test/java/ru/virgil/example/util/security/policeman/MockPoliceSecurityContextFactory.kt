@@ -1,20 +1,16 @@
 package ru.virgil.example.util.security.policeman
 
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.test.context.support.WithSecurityContextFactory
 import org.springframework.stereotype.Component
-import ru.virgil.example.security.UserAuthority
-import ru.virgil.example.util.security.MockAuthorizationService
-import ru.virgil.security.mock.MockSecurityContextFactory
+import ru.virgil.example.security.SecurityUserDetailsService
+import ru.virgil.example.util.security.MockSecurityContextFactory
 
 @Component
 class MockPoliceSecurityContextFactory(
-    mockAuthorizationService: MockAuthorizationService,
-) : MockSecurityContextFactory<WithMockFirebasePoliceman>(mockAuthorizationService) {
+    securityUserDetailsService: SecurityUserDetailsService,
+) : WithSecurityContextFactory<WithMockFirebasePoliceman>, MockSecurityContextFactory(securityUserDetailsService) {
 
-    override fun createSecurityContext(annotation: WithMockFirebasePoliceman): SecurityContext {
-        val authorities = mutableSetOf<GrantedAuthority>(SimpleGrantedAuthority(UserAuthority.ROLE_POLICE.name))
-        return authenticate(annotation.firebaseUserId, annotation.firebaseAuthToken, authorities)
-    }
+    override fun createSecurityContext(annotation: WithMockFirebasePoliceman): SecurityContext =
+        createSecurityContext(annotation.firebaseUserId, annotation.firebaseAuthToken, *annotation.authorities)
 }

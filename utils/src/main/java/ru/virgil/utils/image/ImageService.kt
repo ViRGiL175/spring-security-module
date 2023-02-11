@@ -32,21 +32,18 @@ abstract class ImageService<Owner : IBaseEntity, PrivateImage : IPrivateImage<Ow
     fun savePrivate(content: ByteArray, imageName: String, owner: Owner): PrivateImage {
         val imagePath = BASE_PRIVATE_IMAGE_PATH.resolve("${owner.uuid}")
         val mimeType = fileTypeService.getImageMimeType(content)
-        var privateImage = createEmptyPrivateImage()
-        val uuid = privateImageRepository.save(privateImage).uuid
+        val imageUuid = UUID.randomUUID()
         val fileExtension = mimeType.replace("image/", "")
-        val generatedFileName = "$imageName-$uuid.$fileExtension"
+        val generatedFileName = "$imageName-$imageUuid.$fileExtension"
         val imageFilePath = imagePath.resolve(generatedFileName).normalize()
         Files.createDirectories(imageFilePath.parent)
         Files.write(imageFilePath, content)
-        privateImage.fileLocation = imageFilePath
-        privateImage.owner = owner
-        privateImage.uuid = uuid
+        var privateImage = createPrivateImageFile(imageUuid, owner, imageFilePath)
         privateImage = privateImageRepository.save(privateImage)
         return privateImage
     }
 
-    protected abstract fun createEmptyPrivateImage(): PrivateImage
+    protected abstract fun createPrivateImageFile(uuid: UUID, owner: Owner, imageFilePath: Path): PrivateImage
 
     @PostConstruct
     fun preparePublicWorkDirectory() = copyInWorkPath(BASE_PUBLIC_IMAGE_PATH)

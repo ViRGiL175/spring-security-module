@@ -4,6 +4,6 @@ import java.nio.file.Path
 
 interface IPrivateImage<Owner : IBaseEntity> : IBaseEntity {
 
-    var fileLocation: Path?
-    var owner: Owner?
+    var fileLocation: Path
+    var owner: Owner
 }

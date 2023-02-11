@@ -3,44 +3,42 @@ package ru.virgil.example
 import com.google.common.truth.Truth
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import ru.virgil.example.box.BoxController
-import ru.virgil.example.box.BoxDto
-import ru.virgil.example.box.BoxService
-import ru.virgil.example.box.BoxType
-import ru.virgil.example.user.UserDetailsService
+import ru.virgil.example.box.*
+import ru.virgil.example.system.rest.RestValues.PAGE_PARAM
+import ru.virgil.example.system.rest.RestValues.PAGE_SIZE_PARAM
 import ru.virgil.example.util.security.policeman.WithMockFirebasePoliceman
 import ru.virgil.example.util.security.user.WithMockFirebaseUser
 import ru.virgil.test_utils.AssertUtils
 import ru.virgil.test_utils.fluent_request.RequestUtil
+import ru.virgil.utils.Faker
 import java.util.*
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @WithMockFirebaseUser
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ComponentScan("ru.virgil.test_utils")
+@ComponentScan("ru.virgil.test_utils", "ru.virgil.utils")
 class BoxApiTest @Autowired constructor(
-    private val boxService: BoxService,
-    private val userDetailsService: UserDetailsService,
     private val assertUtils: AssertUtils,
     private val requestUtil: RequestUtil,
+    private val faker: Faker,
+    @Qualifier(BoxMocker.random)
+    private val boxProvider: ObjectProvider<Box>,
 ) {
 
     @Throws(Exception::class)
     @Test
-    fun getAll(): Unit {
-        val boxDtoList = requestUtil["/box?%s=%s&%s=%s"
-            .formatted(
-                BoxController.PAGE_PARAM,
-                BOX_PAGE,
-                BoxController.PAGE_SIZE_PARAM,
-                BOX_PAGE_SIZE
-            )]
+    fun getAll() {
+        val boxDtoList = requestUtil.get(
+            "/box?%s=%s&%s=%s".format(PAGE_PARAM, BOX_PAGE, PAGE_SIZE_PARAM, BOX_PAGE_SIZE)
+        )
             .receive(MutableList::class.java, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as List<BoxDto?>
@@ -51,7 +49,8 @@ class BoxApiTest @Autowired constructor(
     @Test
     @Throws(Exception::class)
     fun get() {
-        val boxDto = requestUtil["/box/%s".formatted(randomBoxUuid())]
+        var box = boxProvider.getObject()
+        val boxDto = requestUtil.get("/box/%s".format(box.uuid))
             .receive(BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
@@ -61,7 +60,7 @@ class BoxApiTest @Autowired constructor(
     @Test
     @Throws(Exception::class)
     fun createWithoutType() {
-        val testDto = BoxDto(null, "CREATED", 50000, 658f)
+        val testDto = BoxDto(null, null, null, null, faker.appliance().brand(), 50000, 658f)
         requestUtil.post("/box")
             .exchange(testDto, BoxDto::class.java)
             .and()
@@ -71,13 +70,13 @@ class BoxApiTest @Autowired constructor(
     @Test
     @Throws(Exception::class)
     fun create() {
-        val testDto = BoxDto(BoxType.USUAL, "CREATED", 50000, 658f)
+        val testDto = BoxDto(type = BoxType.USUAL, description = "CREATED", price = 50000, weight = 658f)
         val createdDto = requestUtil.post("/box")
             .exchange(testDto, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
         assertUtils.partialEquals(createdDto, testDto)
-        val serverDto = requestUtil["/box/" + createdDto.uuid]
+        val serverDto = requestUtil.get("/box/${createdDto.uuid}")
             .receive(BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
@@ -87,13 +86,14 @@ class BoxApiTest @Autowired constructor(
     @Test
     @Throws(Exception::class)
     fun edit() {
-        val testDto = BoxDto(BoxType.USUAL, "EDITED", 78434, 456f)
-        val changedDto = requestUtil.put("/box/%s".formatted(randomBoxUuid()))
+        val testDto = BoxDto(type = BoxType.USUAL, description = "EDITED", price = 78434, weight = 456f)
+        val box = boxProvider.getObject()
+        val changedDto = requestUtil.put("/box/%s".format(box.uuid))
             .exchange(testDto, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
         assertUtils.partialEquals(changedDto, testDto)
-        val serverDto = requestUtil["/box/" + changedDto.uuid]
+        val serverDto = requestUtil.get("/box/${changedDto.uuid}")
             .receive(BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
@@ -103,26 +103,19 @@ class BoxApiTest @Autowired constructor(
     @Test
     @Throws(Exception::class)
     fun delete() {
-        val chatUuid = randomBoxUuid()
-        requestUtil.delete("/box/%s".formatted(chatUuid))
+        val box = boxProvider.getObject()
+        requestUtil.delete("/box/%s".format(box.uuid))
             .and()
             .expect(MockMvcResultMatchers.status().isOk)
-        requestUtil["/box/%s".formatted(chatUuid)]
+        requestUtil.get("/box/%s".format(box.uuid))
             .and()
             .expect(MockMvcResultMatchers.status().isNotFound)
-    }
-
-    private fun randomBoxUuid(): UUID {
-        val currentUser = userDetailsService.currentUser
-        return boxService.getAll(currentUser, 0, Int.MAX_VALUE).stream()
-            .findAny().orElseThrow()
-            .uuid
     }
 
     @Test
     @Throws(Exception::class)
     fun createWeaponByUsualUser() {
-        val testDto = BoxDto(BoxType.WEAPON, "CREATED-BY-USUAL-USER", 50000, 658f)
+        val testDto = BoxDto(type = BoxType.WEAPON, description = "CREATED-BY-USUAL-USER", price = 50000, weight = 658f)
         requestUtil.post("/box")
             .send(testDto)
             .and()
@@ -133,13 +126,13 @@ class BoxApiTest @Autowired constructor(
     @WithMockFirebasePoliceman
     @Throws(Exception::class)
     fun createWeaponByPoliceman() {
-        val testDto = BoxDto(BoxType.WEAPON, "CREATED-BY-POLICEMAN", 50000, 658f)
+        val testDto = BoxDto(type = BoxType.WEAPON, description = "CREATED-BY-POLICEMAN", price = 50000, weight = 658f)
         val createdDto = requestUtil.post("/box")
             .exchange(testDto, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
         assertUtils.partialEquals(createdDto, testDto)
-        val serverDto = requestUtil["/box/%s".formatted(createdDto.uuid)]
+        val serverDto = requestUtil.get("/box/%s".format(createdDto.uuid))
             .receive(BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
@@ -149,13 +142,9 @@ class BoxApiTest @Autowired constructor(
     @Throws(Exception::class)
     @Test
     fun getAllWeaponsByUsualUser(): Unit {
-        requestUtil["/box/weapons?%s=%s&%s=%s"
-            .formatted(
-                BoxController.PAGE_PARAM,
-                BOX_PAGE,
-                BoxController.PAGE_SIZE_PARAM,
-                BOX_PAGE_SIZE
-            )]
+        requestUtil.get(
+            "/box/weapons?%s=%s&%s=%s".format(PAGE_PARAM, BOX_PAGE, PAGE_SIZE_PARAM, BOX_PAGE_SIZE)
+        )
             .and()
             .expect(MockMvcResultMatchers.status().isForbidden)
     }
@@ -164,19 +153,15 @@ class BoxApiTest @Autowired constructor(
     @WithMockFirebasePoliceman
     @Test
     fun getAllWeaponsByPoliceman(): Unit {
-        val testDto = BoxDto(BoxType.WEAPON, "CREATED-BY-POLICEMAN", 50000, 658f)
+        val testDto = BoxDto(type = BoxType.WEAPON, description = "CREATED-BY-POLICEMAN", price = 50000, weight = 658f)
         val serverDto = requestUtil.post("/box")
             .exchange(testDto, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BoxDto
         assertUtils.partialEquals(serverDto, testDto)
-        val weaponDtoList = requestUtil["/box/weapons?%s=%s&%s=%s"
-            .formatted(
-                BoxController.PAGE_PARAM,
-                BOX_PAGE,
-                BoxController.PAGE_SIZE_PARAM,
-                BOX_PAGE_SIZE
-            )]
+        val weaponDtoList = requestUtil.get(
+            "/box/weapons?%s=%s&%s=%s".format(PAGE_PARAM, BOX_PAGE, PAGE_SIZE_PARAM, BOX_PAGE_SIZE)
+        )
             .receive(MutableList::class.java, BoxDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as List<BoxDto?>

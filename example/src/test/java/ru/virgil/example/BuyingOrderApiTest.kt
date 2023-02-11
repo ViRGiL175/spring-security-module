@@ -4,16 +4,19 @@ import com.google.common.truth.Truth
 import org.apache.http.client.utils.URIBuilder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
-import ru.virgil.example.box.BoxController
+import ru.virgil.example.order.BuyingOrder
 import ru.virgil.example.order.BuyingOrderDto
-import ru.virgil.example.order.BuyingOrderService
+import ru.virgil.example.order.BuyingOrderMocker
+import ru.virgil.example.system.rest.RestValues.PAGE_PARAM
+import ru.virgil.example.system.rest.RestValues.PAGE_SIZE_PARAM
 import ru.virgil.example.truck.TruckDto
-import ru.virgil.example.user.UserDetailsService
 import ru.virgil.example.util.security.user.WithMockFirebaseUser
 import ru.virgil.test_utils.fluent_request.RequestUtil
 import java.util.*
@@ -24,18 +27,18 @@ import java.util.*
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ComponentScan("ru.virgil.test_utils")
 class BuyingOrderApiTest @Autowired constructor(
-    private val buyingOrderService: BuyingOrderService,
-    private val userDetailsService: UserDetailsService,
     private val requestUtil: RequestUtil,
+    @Qualifier(BuyingOrderMocker.random)
+    private val buyingOrderProvider: ObjectProvider<BuyingOrder>,
 ) {
 
     @Throws(Exception::class)
     @Test
     fun getAll(): Unit {
         val uriBuilder = URIBuilder().setPath("/buying_order")
-            .addParameter(BoxController.PAGE_PARAM, PAGE.toString())
-            .addParameter(BoxController.PAGE_SIZE_PARAM, PAGE_SIZE.toString())
-        val buyingOrderDtoList = requestUtil[uriBuilder.toString()]
+            .addParameter(PAGE_PARAM, PAGE.toString())
+            .addParameter(PAGE_SIZE_PARAM, PAGE_SIZE.toString())
+        val buyingOrderDtoList = requestUtil.get(uriBuilder.toString())
             .receive(MutableList::class.java, BuyingOrderDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as List<BuyingOrderDto>
@@ -53,7 +56,8 @@ class BuyingOrderApiTest @Autowired constructor(
     @Test
     @Throws(Exception::class)
     fun get() {
-        val randomBuyingOrderDto = requestUtil["/buying_order/%s".formatted(randomOrderUuid())]
+        val buyingOrder = buyingOrderProvider.getObject()
+        val randomBuyingOrderDto = requestUtil.get("/buying_order/%s".format(buyingOrder.uuid))
             .receive(BuyingOrderDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as BuyingOrderDto
@@ -63,22 +67,16 @@ class BuyingOrderApiTest @Autowired constructor(
     @Throws(Exception::class)
     @Test
     fun getTruckByOrder(): Unit {
-        val uri = URIBuilder().setPathSegments("buying_order", randomOrderUuid().toString(), "truck")
-            .addParameter(BoxController.PAGE_PARAM, PAGE.toString())
-            .addParameter(BoxController.PAGE_SIZE_PARAM, PAGE_SIZE.toString())
+        val buyingOrder = buyingOrderProvider.getObject()
+        val uri = URIBuilder().setPathSegments("buying_order", buyingOrder.uuid.toString(), "truck")
+            .addParameter(PAGE_PARAM, PAGE.toString())
+            .addParameter(PAGE_SIZE_PARAM, PAGE_SIZE.toString())
             .toString()
-        val truckDtoList = requestUtil[uri]
+        val truckDtoList = requestUtil.get(uri)
             .receive(MutableList::class.java, TruckDto::class.java)
             .and()
             .expect(MockMvcResultMatchers.status().isOk) as List<TruckDto>
         Truth.assertThat(truckDtoList.stream().findAny().orElseThrow()).isInstanceOf(TruckDto::class.java)
-    }
-
-    private fun randomOrderUuid(): UUID {
-        val currentUser = userDetailsService.currentUser
-        return buyingOrderService.getAll(currentUser, PAGE, PAGE_SIZE).stream()
-            .findAny().orElseThrow()
-            .uuid
     }
 
     companion object {
