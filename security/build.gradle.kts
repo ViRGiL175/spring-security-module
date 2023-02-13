@@ -10,7 +10,7 @@ plugins {
     id("java-library")
     kotlin("jvm") version "1.7.10"
     kotlin("plugin.spring") version "1.7.10"
-    kotlin("plugin.jpa") version "1.7.10"
+    kotlin("plugin.jpa") version "1.8.10"
 }
 
 group = "ru.virgil"
