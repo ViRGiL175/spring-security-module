@@ -60,7 +60,7 @@ dependencies {
     api("net.datafaker:datafaker:1.4.0")
     api("com.google.truth:truth:1.1.3")
     api("org.apache.tika:tika-core:2.4.1")
-    api("org.apache.tika:tika-parsers:2.4.1")
+    api("org.apache.tika:tika-parsers:2.7.0")
 
     // Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

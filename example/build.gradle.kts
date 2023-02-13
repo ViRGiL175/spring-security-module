@@ -51,7 +51,7 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:9.0.0")
     implementation("net.datafaker:datafaker:1.4.0")
     implementation("org.apache.tika:tika-core:2.4.1")
-    implementation("org.apache.tika:tika-parsers:2.4.1")
+    implementation("org.apache.tika:tika-parsers:2.7.0")
 
     // Spring controlled dependencies
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
