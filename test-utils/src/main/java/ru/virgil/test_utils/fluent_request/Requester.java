@@ -21,7 +21,7 @@ public class Requester {
 
     private final MockMvc mockMvc;
     private final TestUtils testUtils;
-    private final ObjectMapper jackson = new ObjectMapper();
+    private final ObjectMapper jackson;
 
     private MockHttpServletRequestBuilder getHttpBuilder(RequestMethod requestMethod, String url) {
         return switch (requestMethod) {
