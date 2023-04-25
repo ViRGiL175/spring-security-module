@@ -9,7 +9,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.0"
     id("java-library")
     kotlin("jvm") version "1.7.10"
-    kotlin("plugin.spring") version "1.7.10"
+    kotlin("plugin.spring") version "1.8.21"
     kotlin("plugin.jpa") version "1.7.10"
 }
 
