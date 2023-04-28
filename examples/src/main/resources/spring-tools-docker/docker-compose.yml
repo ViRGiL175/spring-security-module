@@ -1,0 +1,26 @@
+services:
+
+  spring-tools-example:
+    image: 'spring-tools-example:0.0.1-SNAPSHOT'
+    build:
+      context: .
+    container_name: spring-tools-example
+    depends_on:
+      - spring-tools-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://security-db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=af15be37-f9dd-4418-b219-19559fc31bff
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JAVA_OPTS=-XX:+UseSerialGC -Xss200k -XX:MaxRAM=100m
+    ports:
+      - 8080:8080
+
+  spring-tools-db:
+    image: 'postgres:latest'
+    container_name: spring-tools-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=af15be37-f9dd-4418-b219-19559fc31bff
+    ports:
+      - 5432:5432

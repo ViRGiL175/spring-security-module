@@ -1,0 +1,40 @@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-exception: true
+    include-stacktrace: always
+  servlet:
+    encoding:
+      force: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+spring:
+  datasource:
+    #    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:h2:mem:default
+    username: postgres
+    password: af15be37-f9dd-4418-b219-19559fc31bff
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+
+security:
+  firebase:
+    admin-credentials-file-path: credentials/spring-tools-234ee-firebase-adminsdk-xbery-544218e408.json
+    web-credentials-file-path: credentials/firebase-web-credentials.json
+  anonymous-paths:
+    - "/actuator/**"
+    - "/image/public/**"
+    - "/ping"
+  use-x-auth-token: true
+  disable-post-auth-redirect: true
+
+images:
+  clean-on-destroy: true
