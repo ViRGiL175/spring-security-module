@@ -16,8 +16,8 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import ru.virgil.spring_tools.examples.box.*
 import ru.virgil.spring_tools.examples.integration.roles.policeman.WithMockFirebasePoliceman
+import ru.virgil.spring_tools.examples.integration.roles.user.WithMockFirebaseUser
 import ru.virgil.spring_tools.examples.system.rest.RestValues
-import ru.virgil.spring_tools.examples.user.WithMockFirebaseUser
 import ru.virgil.spring_tools.tools.asserting.AssertUtils
 import ru.virgil.spring_tools.tools.asserting.PartialMatcher
 import ru.virgil.spring_tools.tools.testing.UriHelper
@@ -145,5 +145,4 @@ class BoxApiTest @Autowired constructor(
         }
         weaponDtoList shouldContain serverDto
     }
-
 }

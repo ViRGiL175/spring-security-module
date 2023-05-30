@@ -1,10 +1,13 @@
 package ru.virgil.spring_tools.tools.security
 
 import org.springframework.boot.context.properties.ConfigurationProperties
+import ru.virgil.spring_tools.tools.DeprecationMessages
 
 
 @ConfigurationProperties(prefix = "security")
 data class SecurityProperties(
+    // TODO: Вставлять источники CORS из свойств
+    var corsOrigins: List<String> = ArrayList(),
     /**
      * По этим путям можно будет заходить анонимно
      */
@@ -12,9 +15,7 @@ data class SecurityProperties(
     /**
      * Использовать для сессий заголовок X-Auth-Token вместо Cookies
      */
+    @Deprecated(DeprecationMessages.sessionsNotWorkingYet)
     var useXAuthToken: Boolean = false,
-    /**
-     * Отключить редиректы после успешной авторизации
-     */
-    var disablePostAuthRedirect: Boolean = false,
+    // TODO: Больше не нужно? Как отключать в Resource Server?
 )

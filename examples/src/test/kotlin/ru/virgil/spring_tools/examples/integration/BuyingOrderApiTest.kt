@@ -16,7 +16,7 @@ import ru.virgil.spring_tools.examples.order.BuyingOrderDto
 import ru.virgil.spring_tools.examples.order.BuyingOrderMocker
 import ru.virgil.spring_tools.examples.system.rest.RestValues
 import ru.virgil.spring_tools.examples.truck.TruckDto
-import ru.virgil.spring_tools.examples.user.WithMockFirebaseUser
+import ru.virgil.spring_tools.examples.integration.roles.user.WithMockFirebaseUser
 import ru.virgil.spring_tools.tools.testing.fluent.Fluent
 
 @DirtiesContext

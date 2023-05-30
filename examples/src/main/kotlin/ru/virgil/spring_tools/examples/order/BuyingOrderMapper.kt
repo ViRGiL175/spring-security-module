@@ -9,7 +9,7 @@ interface BuyingOrderMapper {
         description,
     )
 
-    fun BuyingOrder.merge(buyingOrderDto: BuyingOrderDto): BuyingOrder {
+    infix fun BuyingOrder.merge(buyingOrderDto: BuyingOrderDto): BuyingOrder {
         description = buyingOrderDto.description ?: description
         return this
     }

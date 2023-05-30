@@ -1,12 +1,16 @@
 package ru.virgil.spring_tools.examples.truck
 
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.OneToMany
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import ru.virgil.spring_tools.examples.box.Box
 import ru.virgil.spring_tools.examples.order.BuyingOrder
-import ru.virgil.spring_tools.examples.system.entity.IdentifiedEntity
+import ru.virgil.spring_tools.tools.util.data.Identified
+import ru.virgil.spring_tools.tools.util.data.Soft
+import ru.virgil.spring_tools.tools.util.data.Timed
+import java.time.LocalDateTime
+import java.util.*
 
 /**
  * Это фикс поведения JPA для двусторонних связей. Проблема тянется еще с JPA 2,
@@ -15,9 +19,23 @@ import ru.virgil.spring_tools.examples.system.entity.IdentifiedEntity
 private const val CONNECTION = "truck"
 
 @Entity
+@EntityListeners(AuditingEntityListener::class)
 class Truck(
     @OneToMany(cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER, mappedBy = CONNECTION)
     var boxes: Set<Box> = HashSet(),
     @OneToMany(mappedBy = CONNECTION, fetch = FetchType.EAGER)
     val buyingOrder: Set<BuyingOrder> = HashSet(),
-) : IdentifiedEntity()
+) : Identified, Timed, Soft {
+
+    @Id
+    @GeneratedValue
+    override lateinit var uuid: UUID
+
+    @CreationTimestamp
+    override lateinit var createdAt: LocalDateTime
+
+    @UpdateTimestamp
+    override lateinit var updatedAt: LocalDateTime
+
+    override var deleted: Boolean = false
+}

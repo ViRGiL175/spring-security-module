@@ -9,5 +9,4 @@ class FakerProvider {
 
     @Bean
     fun provideFaker() = Faker()
-
 }

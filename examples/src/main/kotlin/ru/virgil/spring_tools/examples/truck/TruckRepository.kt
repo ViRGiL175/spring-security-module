@@ -10,5 +10,4 @@ import java.util.*
 interface TruckRepository : JpaRepository<Truck, UUID> {
 
     fun findAllByBuyingOrderContaining(buyingOrder: BuyingOrder, pageable: Pageable): List<Truck>
-
 }

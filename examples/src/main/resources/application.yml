@@ -13,10 +13,19 @@ logging:
     org:
       springframework:
         security: DEBUG
+      web:
+        cors: DEBUG
+      session: DEBUG
 
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com
+          issuer-uri: https://securetoken.google.com/spring-tools-234ee
   datasource:
-    #    url: jdbc:postgresql://localhost:5432/postgres
+    # url: jdbc:postgresql://localhost:5432/postgres
     url: jdbc:h2:mem:default
     username: postgres
     password: af15be37-f9dd-4418-b219-19559fc31bff
@@ -26,15 +35,11 @@ spring:
       ddl-auto: create
 
 security:
-  firebase:
-    admin-credentials-file-path: credentials/spring-tools-234ee-firebase-adminsdk-xbery-544218e408.json
-    web-credentials-file-path: credentials/firebase-web-credentials.json
   anonymous-paths:
     - "/actuator/**"
     - "/image/public/**"
     - "/ping"
-  use-x-auth-token: true
-  disable-post-auth-redirect: true
+  use-x-auth-token: false
 
 images:
   clean-on-destroy: true

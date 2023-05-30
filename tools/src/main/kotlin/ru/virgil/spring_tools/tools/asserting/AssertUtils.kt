@@ -20,5 +20,4 @@ class AssertUtils(private val objectMapper: ObjectMapper) {
             .toList()
         fullFields shouldContainAll partialFields
     }
-
 }

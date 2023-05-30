@@ -10,5 +10,4 @@ class PingController {
 
     @GetMapping
     fun ping() = "Pong"
-
 }

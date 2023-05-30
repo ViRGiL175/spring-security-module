@@ -1,0 +1,20 @@
+<style>
+  .logout_layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
+<p>authorization works!</p>
+
+<firebase-ui
+  (signInFailure)="onSignInFailure($event)"
+  (signInSuccessWithAuthResult)="onSignInSuccessWithAuthResult($event)"
+/>
+
+<div class="logout_layout">
+  <button (click)="onLogoutClick($event)" *ngIf="angularFireAuth.user| async" mat-raised-button style="">
+    Log Out
+  </button>
+</div>

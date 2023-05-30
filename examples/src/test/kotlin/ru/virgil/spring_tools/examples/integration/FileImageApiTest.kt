@@ -14,11 +14,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import ru.virgil.spring_tools.examples.image.ImageMockService
 import ru.virgil.spring_tools.examples.image.ImageService
 import ru.virgil.spring_tools.examples.image.PrivateImageFileDto
-import ru.virgil.spring_tools.examples.user.WithMockFirebaseUser
+import ru.virgil.spring_tools.examples.integration.roles.user.WithMockFirebaseUser
+import ru.virgil.spring_tools.tools.image.FileTypeService
 import ru.virgil.spring_tools.tools.testing.UriHelper
 import ru.virgil.spring_tools.tools.testing.fluent.Fluent
-import ru.virgil.spring_tools.tools.util.image.FileTypeService
 import java.util.*
+
+private const val imageMimeTypePattern = "image/"
 
 @DirtiesContext
 @SpringBootTest
@@ -31,8 +33,8 @@ class FileImageApiTest @Autowired constructor(
     val fileTypeService: FileTypeService,
 ) : UriHelper {
 
-    @Test
     @WithMockFirebaseUser
+    @Test
     fun postPrivateImage() {
         val privateImageFileDto: PrivateImageFileDto = fluent.request {
             post { "/image/private" }
@@ -40,8 +42,6 @@ class FileImageApiTest @Autowired constructor(
         }
         privateImageFileDto.shouldNotBeNull()
     }
-
-    private val imageMimeTypePattern = "image/"
 
     @WithMockFirebaseUser
     @Test
@@ -97,5 +97,4 @@ class FileImageApiTest @Autowired constructor(
         // TODO при запуске _всех_ тестов не срабатывает, при запуска _одного_ – срабатывает
         imageService.cleanFolders()
     }
-
 }

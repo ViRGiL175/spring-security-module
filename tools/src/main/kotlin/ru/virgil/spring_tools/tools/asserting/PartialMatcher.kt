@@ -8,5 +8,4 @@ interface PartialMatcher {
         assertUtils.partialEquals(this, other)
         return this
     }
-
 }

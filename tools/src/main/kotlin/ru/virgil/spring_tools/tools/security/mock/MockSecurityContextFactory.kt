@@ -1,30 +1,32 @@
 package ru.virgil.spring_tools.tools.security.mock
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.mockito.Mockito
+import org.springframework.security.authentication.AuthenticationEventPublisher
 import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
-import ru.virgil.spring_tools.tools.security.InternalSecurityToken
-import ru.virgil.spring_tools.tools.security.firebase.FirebaseAuthenticationToken
-import ru.virgil.spring_tools.tools.security.service.SecurityUserService
+import org.springframework.security.oauth2.jwt.Jwt
+import ru.virgil.spring_tools.tools.security.internal.InternalAuthenticationToken
+import ru.virgil.spring_tools.tools.security.oauth.SecurityUser
+import ru.virgil.spring_tools.tools.security.oauth.SecurityUserService
 
 abstract class MockSecurityContextFactory(
     private val securityUserService: SecurityUserService,
+    private val authenticationEventPublisher: AuthenticationEventPublisher,
 ) {
 
-    fun <Authorities : Enum<*>> createSecurityContext(
-        userId: String,
-        authToken: String,
-        vararg authorities: Authorities,
+    fun <Authorities> createSecurityContext(
+        firebaseUserId: String,
+        authorities: Collection<Authorities>,
     ): SecurityContext {
+        val authToken = Mockito.mock(Jwt::class.java)
+        // TODO: Везде использовать UserDetailsInterface?
+        val firebaseUser = securityUserService.loadByFirebaseUserId(firebaseUserId) as SecurityUser?
+            ?: securityUserService.registerByFirebaseUserId(firebaseUserId, authToken) as SecurityUser
+        firebaseUser.springAuthorities += authorities.map { it.toString() }.toMutableSet()
         val securityContext = SecurityContextHolder.createEmptyContext()
-        val firebaseAuthenticationToken = FirebaseAuthenticationToken(
-            authorities.map { SimpleGrantedAuthority(it.name) }.toMutableSet(),
-            userId,
-            authToken
-        )
-        val securityUser = securityUserService.registerOrLogin(firebaseAuthenticationToken)
-        val internalSecurityToken = InternalSecurityToken(firebaseAuthenticationToken.authorities, securityUser)
-        securityContext.authentication = internalSecurityToken
+        val internalAuthenticationToken = InternalAuthenticationToken(firebaseUser, authToken)
+        securityContext.authentication = internalAuthenticationToken
+        authenticationEventPublisher.publishAuthenticationSuccess(internalAuthenticationToken)
         return securityContext
     }
 }

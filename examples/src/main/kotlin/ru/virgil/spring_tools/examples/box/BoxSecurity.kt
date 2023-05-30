@@ -8,4 +8,8 @@ class BoxSecurity {
 
     fun hasWeapon(boxDto: BoxDto): Boolean = boxDto.type!! == BoxType.WEAPON
 
+    companion object {
+
+        fun hasWeapon(boxDto: BoxDto): Boolean = boxDto.type!! == BoxType.WEAPON
+    }
 }

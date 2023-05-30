@@ -1,5 +1,6 @@
 package ru.virgil.spring_tools.examples.stats
 
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -9,6 +10,10 @@ import ru.virgil.spring_tools.examples.order.BuyingOrderRepository
 import ru.virgil.spring_tools.examples.order.BuyingOrderService
 import ru.virgil.spring_tools.examples.truck.TruckRepository
 
+@CrossOrigin(
+    origins = ["http://localhost:4200/"],
+    allowCredentials = true.toString()
+)
 @RestController
 @RequestMapping("/stats")
 class StatsController(

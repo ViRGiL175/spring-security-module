@@ -1,6 +1,7 @@
 package ru.virgil.spring_tools.examples.box
 
 import jakarta.annotation.security.RolesAllowed
+import jakarta.persistence.*
 import org.springframework.security.access.prepost.PostAuthorize
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -8,6 +9,10 @@ import ru.virgil.spring_tools.examples.system.rest.RestValues
 import ru.virgil.spring_tools.examples.truck.TruckService
 import java.util.*
 
+@CrossOrigin(
+    origins = ["http://localhost:4200/"],
+    allowCredentials = true.toString()
+)
 @RestController
 @RequestMapping("/box")
 class BoxController(
@@ -29,6 +34,7 @@ class BoxController(
         .map { it.toDto() }
         .toList()
 
+    // TODO: Почему-то не работает, надо будет понять, почему.
     @PostAuthorize(
         """
         hasRole('ROLE_POLICE') and @boxSecurity.hasWeapon(returnObject)
@@ -65,5 +71,4 @@ class BoxController(
     fun delete(@PathVariable uuid: UUID) {
         boxService.delete(uuid)
     }
-
 }

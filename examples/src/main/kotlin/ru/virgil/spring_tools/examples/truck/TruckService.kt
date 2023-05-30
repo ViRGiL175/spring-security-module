@@ -14,5 +14,4 @@ class TruckService(private val repository: TruckRepository) {
         repository.findAllByBuyingOrderContaining(buyingOrder, PageRequest.of(page, size))
 
     fun assignTruck(): Truck = repository.findAll().random()
-
 }

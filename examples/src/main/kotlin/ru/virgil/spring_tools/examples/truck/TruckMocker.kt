@@ -5,21 +5,14 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Lazy
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-import ru.virgil.spring_tools.examples.system.mock.BaseMocker
+import ru.virgil.spring_tools.examples.mock.MockerUtils
 import java.util.*
 
 @Lazy
 @Component
 class TruckMocker(
     private val truckRepository: TruckRepository,
-) : BaseMocker() {
-
-    companion object {
-
-        private const val name = "truck"
-        const val new = "new-$name"
-        const val random = "random-$name"
-    }
+) : MockerUtils {
 
     @Bean(new)
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -29,4 +22,10 @@ class TruckMocker(
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     fun random(): Truck = truckRepository.findAll().random()
 
+    companion object {
+
+        private const val name = "truck"
+        const val new = "new-$name"
+        const val random = "random-$name"
+    }
 }

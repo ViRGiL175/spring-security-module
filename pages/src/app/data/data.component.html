@@ -1,0 +1,34 @@
+<style>
+  .data_layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+</style>
+
+<app-authorization/>
+
+<p>data works!</p>
+
+<div class="data_layout">
+
+  <div *ngIf="allStatistic != null">
+    <p>Statistic:</p>
+    <p>All Boxes: {{allStatistic.boxes}}</p>
+    <p>All Trucks: {{allStatistic.trucks}}</p>
+    <p>All Orders: {{allStatistic.orders}}</p>
+  </div>
+
+  <div>
+    My data: {{userSettings?.name}}
+  </div>
+
+  <div>
+    My boxes: {{myStatistic?.boxes}}
+  </div>
+
+  <div>
+    My orders: {{myStatistic?.orders}}
+  </div>
+
+</div>
